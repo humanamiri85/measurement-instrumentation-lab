@@ -126,3 +126,78 @@ test("final challenge has a demanding, feasible choice", () => {
   assert.ok(total(10, 1, 0.2, 0.05, 0.005) > 0.05);
   assert.ok(total(5, 0.1, 0.001, 1.2, 0.0001) > 0.05);
 });
+
+// Enrichment models are isolated to Chapter 2; established models above remain unchanged.
+import {
+  instrumentSpan,
+  scaledStep,
+  sampledSignal,
+  calibrationReading,
+  standardPressure,
+  pressureAltitude,
+  airData,
+  aiDataset,
+  fitLine,
+} from "../assets/js/chapter2-models.mjs";
+test("range interval and span remain distinct with negative endpoints", () => {
+  close(instrumentSpan(-50, 150), 200);
+  close(instrumentSpan(-100, 50), 150);
+});
+test("step amplitude and gain change final output but not the time constant", () => {
+  close(scaledStep(0, 1, 60, 1), 20);
+  close(scaledStep(2, 2, 40, 1.5), 20 + 60 * (1 - Math.exp(-1)));
+  close(scaledStep(100, 1, 10, 0.5), 25);
+});
+test("sampling and quantization are separate and preserve nearest-step bounds", () => {
+  const a = sampledSignal(0.25, 0.1);
+  assert.equal(a.samples.length, 17);
+  assert.deepEqual(a.held.slice(0, 3), [
+    [0, 5],
+    [0.25, 5],
+    [0.25, 6.4],
+  ]);
+  for (const s of a.samples)
+    assert.ok(Math.abs(s.digital - s.analog) <= 0.05000001);
+  const b = sampledSignal(1, 0.1);
+  for (const s of b.samples) close(s.analog, 5);
+  assert.ok(a.samples.some((s) => Math.abs(s.analog - 5) > 1));
+});
+test("calibration effects can be isolated without changing established adjustment model", () => {
+  close(calibrationReading(5, { offset: 0, scale: 0, noise: 0, bow: 0 }), 5);
+  close(calibrationReading(0, { offset: 0.4, scale: 0 }), 0.4);
+  close(calibrationReading(10, { offset: 0, scale: 0.08 }), 10.8);
+  close(calibrationReading(5, { offset: 0, scale: 0, bow: 0.4 }), 5.4);
+  assert.notEqual(
+    calibrationReading(5, { offset: 0, scale: 0, noise: 0.08 }, 0),
+    calibrationReading(5, { offset: 0, scale: 0, noise: 0.08 }, 1),
+  );
+});
+test("standard-atmosphere conversion roundtrips and is explicitly pressure altitude", () => {
+  close(standardPressure(0), 101325);
+  close(standardPressure(1000), 89874.57, 0.1);
+  for (const h of [0, 1000, 3000])
+    close(pressureAltitude(standardPressure(h)), h, 1e-7);
+});
+test("static-channel bias affects both pressure altitude and equivalent speed", () => {
+  const ps = standardPressure(1000),
+    pt = ps + 0.5 * 1.225 * 60 ** 2;
+  const ideal = airData(ps, pt),
+    biased = airData(ps + 200, pt);
+  close(ideal.altitude, 1000, 1e-7);
+  close(ideal.equivalentSpeed, 60);
+  assert.ok(biased.altitude < 1000 && biased.equivalentSpeed < 60);
+  assert.equal(airData(ps + 100, ps).equivalentSpeed, null);
+});
+test("AI dataset supports an affine diagnosis and preserves residual evidence", () => {
+  const fit = fitLine(aiDataset);
+  close(fit.slope, 7139 / 7000);
+  close(fit.offset, 1.990476190476194, 1e-8);
+  assert.ok(Math.max(...fit.residuals.map(Math.abs)) < 0.13);
+  close(
+    fitLine([
+      { reference: 0, measured: 2 },
+      { reference: 10, measured: 12 },
+    ]).slope,
+    1,
+  );
+});

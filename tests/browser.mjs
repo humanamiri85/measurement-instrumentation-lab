@@ -56,7 +56,7 @@ try {
   await page.waitForURL(/#intro$/);
   assert.equal(
     await page.locator("h1").textContent(),
-    "Three instruments.One pressure line.",
+    "Two instruments.One pressure line.",
   );
   await page
     .getByRole("button", {
@@ -158,6 +158,7 @@ try {
     /OUT OF RANGE/,
   );
   for (const mode of [
+    "span",
     "range",
     "scatter",
     "repeat",
@@ -213,6 +214,7 @@ try {
   await checkControls();
   await page.getByRole("button", { name: "Mark stage complete" }).click();
   await navigate("challenge");
+  await page.locator("[data-synthesis=selection]").click();
   await page.locator("#submit-decision").click();
   assert.match(
     await page.locator("#decision-feedback").textContent(),
@@ -292,6 +294,7 @@ try {
           ? ["energy", "balance", "digital", "signal", "smart"]
           : stage === "static"
             ? [
+                "span",
                 "range",
                 "scatter",
                 "repeat",
@@ -324,8 +327,10 @@ try {
         layouts++;
       }
       if (stage === "dynamic") await page.locator("#apply-step").click();
-      if (stage === "challenge")
+      if (stage === "challenge") {
+        await page.locator("[data-synthesis=selection]").click();
         await page.locator("[data-candidate=b]").click();
+      }
       if (stage === "static") {
         await setRange("dead-input", 8);
         await setRange("dead-input", 7.5);
@@ -336,6 +341,188 @@ try {
           path: resolve(repo, `test-results/${label}-${stage}.png`),
           fullPage: true,
         });
+    }
+  }
+  // Additional aerospace enrichment: bridges, quantitative controls, feedback, and layouts.
+  await page.goto(base + "chapters/chapter-02/index.html#intro");
+  await setRange("bridge-altitude", 1000);
+  assert.match(
+    await page.locator("#bridge-reading").textContent(),
+    /898.75 hPa/,
+  );
+  for (const button of await page.locator("[data-chain-step]").all())
+    await button.click();
+  assert.match(
+    await page.locator("#bridge-description").textContent(),
+    /Output/,
+  );
+  await page
+    .getByRole("link", {
+      name: "Explore the existing Measurement Chain activity",
+    })
+    .click();
+  await page.waitForURL(/#types\/signal$/);
+  await page.locator("#chain-mode").selectOption("signal");
+  await setRange("chain-pressure", 10);
+  assert.match(await page.locator("#chain-result").textContent(), /20.00 mA/);
+  await page.locator("[data-type=digital]").click();
+  await setRange("sample-interval", 1);
+  assert.match(await page.locator("#sampling-result").textContent(), /1.00 s/);
+  await page.goto(base + "chapters/chapter-02/index.html#static");
+  await page.locator("[data-static=span]").click();
+  assert.match(await page.locator("#static-result").textContent(), /200°C/);
+  await page.locator("[data-static=scatter]").click();
+  for (const name of ["poor", "biased", "good"])
+    await page.locator(`[data-accuracy=${name}]`).click();
+  assert.equal(await page.locator("#bias").inputValue(), "0");
+  assert.equal(await page.locator("#scatter").inputValue(), "0.04");
+  await page.locator("[data-static=threshold]").click();
+  await setRange("threshold-input", 0.54);
+  await page.locator("#resolution").selectOption("0.1");
+  assert.match(await page.locator("#static-result").textContent(), /0.54 N/);
+  assert.match(await page.locator("#static-result").textContent(), /0.50 N/);
+  await page.locator("[data-static=drift]").click();
+  await page.locator("#drift-mode").selectOption("zero");
+  await setRange("temperature", 40);
+  assert.match(await page.locator("#static-result").textContent(), /0.50 bar/);
+  await page.locator("#drift-mode").selectOption("gain");
+  assert.match(
+    await page.locator("#static-result").textContent(),
+    /1.060 bar\/bar/,
+  );
+  await page.locator("[data-static=hysteresis]").click();
+  await setRange("hysteresis-input", 6);
+  await setRange("hysteresis-input", 5);
+  assert.equal(await page.locator("#direction").inputValue(), "down");
+  assert.match(await page.locator("#static-result").textContent(), /5.30 bar/);
+  await setRange("hysteresis-input", 4);
+  await setRange("hysteresis-input", 5);
+  assert.equal(await page.locator("#direction").inputValue(), "up");
+  assert.match(await page.locator("#static-result").textContent(), /4.70 bar/);
+  for (const id of ["hysteresis-up", "hysteresis-down"])
+    await page.locator("#" + id).click();
+  await page.goto(base + "chapters/chapter-02/index.html#dynamic");
+  await page.locator("#apply-step").click();
+  await setRange("step-amplitude", 40);
+  await setRange("step-gain", 1.5);
+  await setRange("tau", 2);
+  await setRange("time-cursor", 2);
+  assert.match(await page.locator("#dynamic-result").textContent(), /57.9°C/);
+  assert.match(
+    await page.locator("#dynamic-result").textContent(),
+    /Input measurand/,
+  );
+  assert.match(
+    await page.locator("#dynamic-result").textContent(),
+    /Zero-order output/,
+  );
+  await audit("enriched dynamics");
+  await page.goto(base + "chapters/chapter-02/index.html#calibration");
+  for (const id of ["error-offset", "error-scale", "error-noise", "error-bow"])
+    await page.locator("#" + id).uncheck();
+  assert.match(await page.locator("#error-plot").textContent(), /0.000 bar/);
+  await page.locator("#error-offset").check();
+  assert.match(await page.locator("#error-plot").textContent(), /0.400 bar/);
+  await page.locator("#error-scale").check();
+  assert.match(await page.locator("#error-plot").textContent(), /0.800 bar/);
+  await page.locator("#error-noise").check();
+  await page.locator("#error-bow").check();
+  await page.locator("#error-resample").click();
+  await audit("error characterization");
+  await page.goto(base + "chapters/chapter-02/index.html#challenge");
+  await setRange("air-bias", 200);
+  assert.match(
+    await page.locator("#air-result").textContent(),
+    /altitude lower/,
+  );
+  await setRange("air-speed", 0);
+  assert.match(await page.locator("#air-result").textContent(), /Invalid/);
+  await checkControls();
+  await audit("pitot-static case");
+  await page.locator("[data-synthesis=ai]").click();
+  await page
+    .locator("#ai-prediction")
+    .fill(
+      "The zero offset is about 2 kPa and error grows with reference pressure.",
+    );
+  await page.locator("#ai-copy").click();
+  assert.match(await page.locator("#ai-prompt").inputValue(), /reference_kPa/);
+  await page.locator("#ai-reference").click();
+  assert.match(await page.locator("#ai-analysis").textContent(), /1.01986/);
+  await page.locator("#ai-offset").check();
+  await page.locator("#ai-scale").check();
+  await page
+    .locator("#ai-conclusion")
+    .fill(
+      "An offset near 2 kPa and a scale error near 2% fit the data. I would add an unloading run and timed response tests.",
+    );
+  await page.locator("#ai-review").click();
+  assert.match(
+    await page.locator("#ai-feedback").textContent(),
+    /consistent with the data/,
+  );
+  await page.locator("#ai-lag").check();
+  await page.locator("#ai-review").click();
+  assert.match(await page.locator("#ai-feedback").textContent(), /Revisit/);
+  const aiDownload = page.waitForEvent("download");
+  await page.locator("#ai-download").click();
+  assert.equal(
+    (await aiDownload).suggestedFilename(),
+    "chapter-02-ai-evidence.txt",
+  );
+  await audit("AI evidence exercise");
+  for (const [width, height, label] of [
+    [1440, 1000, "desktop"],
+    [1280, 800, "laptop"],
+    [768, 1024, "tablet"],
+    [390, 844, "phone"],
+  ]) {
+    await page.setViewportSize({ width, height });
+    for (const mode of ["aircraft", "selection", "ai"]) {
+      await page.goto(
+        base + `chapters/chapter-02/index.html#challenge/${mode}`,
+      );
+      if (mode === "ai") await page.locator("#ai-reference").click();
+      assert.ok(
+        await page.evaluate(
+          () => document.documentElement.scrollWidth <= innerWidth,
+        ),
+        `Enrichment overflow ${width} ${mode}`,
+      );
+      await page.screenshot({
+        path: resolve(repo, `test-results/${label}-enrichment-${mode}.png`),
+        fullPage: true,
+      });
+      layouts++;
+    }
+  }
+  for (const [width, height, label] of [
+    [1280, 800, "laptop"],
+    [390, 844, "phone"],
+  ]) {
+    await page.setViewportSize({ width, height });
+    for (const [stage, mode] of [
+      ["intro", null],
+      ["types", "digital"],
+      ["static", "span"],
+      ["static", "scatter"],
+      ["static", "threshold"],
+      ["static", "hysteresis"],
+      ["calibration", null],
+    ]) {
+      await page.goto(base + `chapters/chapter-02/index.html#${stage}`);
+      if (mode)
+        await page
+          .locator(`[data-${stage === "types" ? "type" : "static"}=${mode}]`)
+          .click();
+      if (mode === "hysteresis") await page.locator("#hysteresis-up").click();
+      await page.screenshot({
+        path: resolve(
+          repo,
+          `test-results/${label}-bench-${stage}-${mode || "all"}.png`,
+        ),
+        fullPage: true,
+      });
     }
   }
   // Native keyboard behavior and visible focus.
@@ -378,7 +565,7 @@ try {
   await blocked.close();
   assert.deepEqual(issues, [], "Browser/console/network failures");
   console.log(
-    `PASS: all 6 stages, 14 subexperiments, range/select limits, questions, calibration pass/fail, decision export, progress persistence/fallback, keyboard controls, WCAG A/AA audits, and ${layouts} layout combinations across 4 viewports. No console or request errors.`,
+    `PASS: all 6 stages, 15 type/static subexperiments plus aerospace and AI enrichment, range/select limits, questions, calibration pass/fail, decision export, progress persistence/fallback, keyboard controls, WCAG A/AA audits, and ${layouts} layout combinations across 4 viewports. No console or request errors.`,
   );
 } finally {
   await browser?.close();

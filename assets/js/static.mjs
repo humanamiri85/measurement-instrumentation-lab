@@ -20,7 +20,10 @@ import {
   hysteresis,
   backlash,
 } from "./models.mjs";
+import { instrumentSpan } from "./chapter2-models.mjs";
+import { accuracyTarget } from "./chapter2-activities.mjs";
 const experiments = [
+  ["span", "Range vs span"],
   ["range", "Range & accuracy"],
   ["scatter", "Accuracy & precision"],
   ["repeat", "Repeatability"],
@@ -34,13 +37,31 @@ const experiments = [
 const bench = (title, controls) =>
   `<div class="bench"><div class="bench-head"><h2>${title}</h2><span>STATIC / STEADY STATE</span></div><div class="bench-body"><div class="bench-grid"><div class="controls">${controls}</div><div id="static-result"></div></div></div></div>`;
 export function staticLab(root) {
-  root.innerHTML = `<span class="eyebrow">2.3 / Static performance lab</span><h1>What does the reading hide?</h1><p class="lead">Let the instrument settle, then investigate its limits. Each bench isolates one characteristic so you can see its effect before combining it with others.</p><div class="tabs" role="group" aria-label="Static experiments">${experiments.map(([id, label], i) => `<button data-static="${id}" aria-pressed="${i === 0}">${label}</button>`).join("")}</div><div id="static-panel"></div>`;
+  root.innerHTML = `<span class="eyebrow">Block B / 2.3 · How good is a measurement?</span><h1>What does the reading hide?</h1><p class="lead">Static characteristics describe settled readings when the measurand is constant or changes sufficiently slowly. Let the instrument settle, then investigate its limits. Each bench isolates one characteristic so you can see its effect before combining it with others.</p><div class="tabs" role="group" aria-label="Static experiments">${experiments.map(([id, label], i) => `<button data-static="${id}" aria-pressed="${i === 0}">${label}</button>`).join("")}</div><div id="static-panel"></div>`;
   const panel = $("#static-panel", root);
   function show(mode) {
     $$("[data-static]", root).forEach((b) =>
       b.setAttribute("aria-pressed", String(b.dataset.static === mode)),
     );
     let update;
+    if (mode === "span") {
+      panel.innerHTML = `<div class="scenario"><strong>A temperature probe is specified from −50°C to 150°C.</strong><p>Predict its span. Change the endpoints and compare the operating interval with its numerical width.</p></div>${bench("Operating interval and numerical span", `${range("range-lower", "Lower operating limit", -100, 0, 5, -50, "°C")}${range("range-upper", "Upper operating limit", 50, 200, 5, 150, "°C")}${range("range-temperature", "Temperature to measure", -100, 200, 5, 20, "°C")}`)}${question("span-check", "A range of −50°C to 150°C has a span of…", ["100°C", "150°C", "200°C"], 2, "Range is the minimum-to-maximum interval. Span = upper limit − lower limit = 150 − (−50) = 200°C.")}`;
+      update = () => {
+        const low = +$("#range-lower", panel).value,
+          high = +$("#range-upper", panel).value,
+          t = +$("#range-temperature", panel).value,
+          span = instrumentSpan(low, high),
+          inside = t >= low && t <= high;
+        $("#static-result", panel).innerHTML =
+          `<div class="range-scale" role="img" aria-label="Temperature range ${low} to ${high} degrees Celsius, span ${span} degrees Celsius; current temperature ${t} degrees Celsius ${inside ? "inside" : "outside"} the range."><div class="range-track"><span style="left:${Math.max(0, Math.min(100, ((t - low) / span) * 100))}%">▼</span></div><div class="range-endpoints"><strong>${low}°C</strong><strong>${high}°C</strong></div></div>${metrics(
+            [
+              ["Range", `${low} to ${high}°C`],
+              ["Span", `${span}°C`],
+              ["Current input", `${t}°C`],
+            ],
+          )}<p class="observation">${inside ? "Input is inside the operating interval." : "OUT OF RANGE: the instrument’s specified performance does not apply."} The span is an interval width, not the upper endpoint.</p>`;
+      };
+    }
     if (mode === "range") {
       panel.innerHTML = `<div class="scenario"><strong>You are measuring only 1 bar.</strong><p>Predict the largest allowed error of a 0–10 bar instrument rated ±1% full scale. Then shrink the range while keeping the same specification.</p></div>${bench("Pressure range selection", `${range("span", "Full-scale range (0 to…)", 1, 20, 0.5, 10, "bar")}${range("fs-accuracy", "Accuracy limit", 0.1, 3, 0.1, 1, "%FS")}${range("actual-pressure", "Actual pressure", 0, 20, 0.1, 1, "bar")}`)}${question("range-q", "At 1 bar, a 0–10 bar gauge rated ±1% FS has a relative error limit of…", ["±1%", "±10%", "±0.1%"], 1, "1% of 10 bar is 0.1 bar. Relative to 1 bar, 0.1 / 1 × 100 = 10%. Full-scale accuracy is referenced to the span, not the present reading.")}<details class="explain"><summary>Explain the error limit, span, and tolerance</summary><p>For this zero-based range: <strong>absolute error limit = span × %FS / 100</strong>. Relative error = absolute limit / |reading| × 100; at zero it is undefined. A nonzero-based range has span = upper limit − lower limit.</p><p>Accuracy describes closeness to a reference value. An accuracy specification often states a maximum permissible error under specified conditions. <strong>Tolerance</strong> is an allowed departure from a nominal or required value; a process tolerance is not the same as an instrument error limit. A fine resolution cannot compensate for a large error limit.</p></details>`;
       update = () => {
@@ -92,7 +113,12 @@ export function staticLab(root) {
               ])
             : ""
         }<button id="sample-again" type="button">Repeat ten measurements</button><p class="note">Deterministic sample patterns make comparisons repeatable; these are illustrative samples, not a noise uncertainty estimate.</p>`,
-      )}${question("precision-q", repeat ? "A tight group obtained under identical conditions demonstrates…" : "High precision always guarantees high accuracy. ", repeat ? ["Repeatability; changed conditions still need evaluation", "Reproducibility in all environments"] : ["True", "False"], repeat ? 0 : 1, repeat ? "Repeatability concerns successive measurements under the same conditions. Reproducibility examines agreement when specified conditions change. Report which conditions were varied." : "Tight clustering shows low scatter. A tightly clustered group can still be displaced from the reference by systematic bias.")}<details class="explain"><summary>${repeat ? "Explain repeatability and reproducibility" : "Explain accuracy and precision"}</summary><p>${repeat ? "Same-condition agreement is repeatability. A different operator, instrument, laboratory, or environment can introduce an additional shift. Reproducibility assesses agreement across those specified changes; it is not established by one repeat run." : "Accuracy is closeness to a reference; precision is agreement among repeated readings. The sample mean error and sample standard deviation shown here help separate offset from scatter. Mean error alone is not a complete measure of individual-reading accuracy or uncertainty."}</p></details>`;
+      )}${question("precision-q", repeat ? "A tight group obtained under identical conditions demonstrates…" : "High precision always guarantees high accuracy. ", repeat ? ["Repeatability; changed conditions still need evaluation", "Reproducibility in all environments"] : ["True", "False"], repeat ? 0 : 1, repeat ? "Repeatability concerns successive measurements under the same method, same instrument, same conditions, and a short time interval. Reproducibility examines agreement when specified conditions change. Report which conditions were varied." : "Tight clustering shows low scatter. A tightly clustered group can still be displaced from the reference by systematic bias.")}<details class="explain"><summary>${repeat ? "Explain repeatability and reproducibility" : "Explain accuracy and precision"}</summary><p>${repeat ? "Same-condition agreement is repeatability. A different operator, instrument, laboratory, or environment can introduce an additional shift. Reproducibility assesses agreement across those specified changes; it is not established by one repeat run." : "Accuracy is closeness to a reference; precision is agreement among repeated readings. The sample mean error and sample standard deviation shown here help separate offset from scatter. Mean error alone is not a complete measure of individual-reading accuracy or uncertainty."}</p></details>`;
+      if (!repeat)
+        panel.insertAdjacentHTML(
+          "beforeend",
+          `<div id="accuracy-target"></div><div class="actions" role="group" aria-label="Accuracy and precision examples"><button data-accuracy="poor">Low accuracy / low precision</button><button data-accuracy="biased">High precision / low accuracy</button><button data-accuracy="good">High accuracy / high precision</button></div>`,
+        );
       let run = 0;
       update = () => {
         const bias = +$("#bias", panel).value,
@@ -103,6 +129,8 @@ export function staticLab(root) {
           b = samples(bias, scatter, shift, run + 3),
           s = statistics(a),
           s2 = statistics(b);
+        if (!repeat)
+          $("#accuracy-target", panel).innerHTML = accuracyTarget(a, bias);
         $("#static-result", panel).innerHTML =
           plot({
             title: repeat
@@ -134,8 +162,23 @@ export function staticLab(root) {
                 ]
               : []),
           ]) +
-          `<p class="observation">${repeat ? (shift === 0 ? "The means agree under the same conditions. Changing conditions can introduce a shift without increasing within-run scatter." : "Both groups can be tightly clustered while disagreeing with each other: good repeatability alone does not establish good reproducibility.") : Math.abs(s.mean - 5) > 0.3 && s.sd < 0.2 ? "A tight cluster away from the reference: high precision, poor closeness to the reference." : "Compare the mean error with the spread. Bias moves the cluster; scatter broadens it."}</p>`;
+          `<p class="observation">${repeat ? (shift === 0 ? "The means agree under the same method, same instrument, same conditions, and a short time interval. Changing conditions can introduce a shift without increasing within-run scatter." : "Both groups can be tightly clustered while disagreeing with each other: good repeatability alone does not establish good reproducibility.") : Math.abs(s.mean - 5) > 0.3 && s.sd < 0.2 ? "A tight cluster away from the reference: high precision, poor closeness to the reference." : "Compare the mean error with the spread. Bias moves the cluster; scatter broadens it."}</p>`;
       };
+      $$("[data-accuracy]", panel).forEach((button) =>
+        button.addEventListener("click", () => {
+          const presets = {
+              poor: [0.8, 0.5],
+              biased: [0.8, 0.08],
+              good: [0, 0.04],
+            },
+            [bias, scatter] = presets[button.dataset.accuracy];
+          $("#bias", panel).value = bias;
+          $("#scatter", panel).value = scatter;
+          $("#bias", panel).dispatchEvent(
+            new Event("input", { bubbles: true }),
+          );
+        }),
+      );
       $("#sample-again", panel).addEventListener("click", () => {
         run++;
         update();
@@ -155,7 +198,7 @@ export function staticLab(root) {
             ["0.01", "0.01 N"],
           ],
         )}`,
-      )}<details class="explain"><summary>Explain the two limits</summary><p><strong>Threshold</strong> is the minimum input needed to produce a detectable response starting from zero. <strong>Resolution</strong> is the smallest distinguishable change in indicated output. This simplified model suppresses input below threshold, then rounds the response to a digital step. The abrupt activation is a teaching model; actual response onset depends on the instrument.</p></details>`;
+      )}<details class="explain"><summary>Explain the two limits</summary><p><strong>Threshold</strong> is the minimum input needed to produce a detectable response starting from zero. <strong>Resolution</strong> is the smallest distinguishable change in indicated output; input-referred resolution is the corresponding input increment determined by sensitivity. Here gain is one, so the input and output step sizes have the same numerical value. This simplified model suppresses input below threshold, then rounds the response to a digital step. The abrupt activation is a teaching model; actual response onset depends on the instrument.</p></details>`;
       update = () => {
         const input = +$("#threshold-input", panel).value,
           threshold = +$("#threshold", panel).value,
@@ -183,11 +226,11 @@ export function staticLab(root) {
             ["Indication", `${fmt(out)} N`],
             ["Smallest output step", `${fmt(step)} N`],
           ]) +
-          `<p class="observation">${input < threshold ? "Below the initial threshold: output remains zero." : "The threshold has been crossed. Further small input changes may still round to the same displayed value."}</p>`;
+          `<p class="observation">${input < threshold ? "Below the initial threshold: output remains zero." : "The threshold has been crossed. Further small input changes may still round to the same displayed value."}</p><h3 style="margin-top:24px">Analog scale comparison</h3><div class="range-scale" role="img" aria-label="Analog scale from zero to two newtons with 0.2 newton divisions. Model pointer position ${fmt(input < threshold ? 0 : input)} newtons."><div class="range-track"><span style="left:${((input < threshold ? 0 : input) / 2) * 100}%">▼</span></div><div class="range-endpoints"><strong>0 N</strong><strong>2 N</strong></div></div><p class="note">Scale divisions: 0.2 N. The pointer moves continuously after the initial threshold; its modeled position is ${fmt(input < threshold ? 0 : input)} N. Pointer width, interpolation, viewing conditions, and the observer limit real analog reading discrimination. The digital indication above changes in ${fmt(step)} N steps. Neither scale divisions nor digital steps establish calibration accuracy.</p>`;
       };
     }
     if (mode === "sensitivity") {
-      panel.innerHTML = `<div class="scenario"><strong>Your pressure sensor drives a voltage recorder.</strong><p>Predict how much the voltage changes when pressure rises by 1 bar. Increase the slope, then check whether the recorder can still accept the full range.</p></div>${bench("Input–output sensitivity", `${range("slope", "Sensitivity", 0.1, 2, 0.1, 0.5, "V/bar")}${range("sensitivity-input", "Pressure", 0, 10, 0.1, 4, "bar")}`)}<details class="explain"><summary>Explain slope and useful sensitivity</summary><p><strong>Sensitivity = change in output / change in input</strong>, the slope of the characteristic. Here V = S × p. High sensitivity makes a small pressure change produce a larger voltage change, but does not guarantee low error. The recorder accepts 0–5 V; excessive slope causes saturation.</p></details>`;
+      panel.innerHTML = `<div class="scenario"><strong>Your pressure sensor drives a voltage recorder.</strong><p>Predict how much the voltage changes when pressure rises by 1 bar. Increase the slope, then check whether the recorder can still accept the full range.</p></div>${bench("Input–output sensitivity", `${range("slope", "Sensitivity", 0.1, 2, 0.1, 0.5, "V/bar")}${range("sensitivity-input", "Pressure", 0, 10, 0.1, 4, "bar")}`)}<details class="explain"><summary>Explain slope and useful sensitivity</summary><p><strong>Sensitivity = change in output / change in input</strong>, the slope of the characteristic. Here V = S × p. For a temperature transducer, a 100 mV output change over 4°C gives 25 mV/°C, equivalent to 0.025 V/°C, not 25 V/°C. High sensitivity makes a small pressure change produce a larger voltage change, but does not guarantee low error. The recorder accepts 0–5 V; excessive slope causes saturation.</p></details>`;
       update = () => {
         const s = +$("#slope", panel).value,
           p = +$("#sensitivity-input", panel).value;
@@ -288,12 +331,24 @@ export function staticLab(root) {
             ["down", "Unloading: approach from higher pressure"],
           ],
         )}`,
-      )}<details class="explain"><summary>Explain history dependence</summary><p>Hysteresis means the indication at an input depends on the previous path. This quasi-static model uses separate loading and unloading curves that meet at the endpoints. Their maximum separation is the selected width at midrange. It models direction dependence, not a speed-dependent lag.</p></details>`;
+      )}<details class="explain"><summary>Explain history dependence</summary><p>Hysteresis means the indication at an input depends on the previous path. This quasi-static model uses separate loading and unloading curves that meet at the endpoints. Their maximum separation is the selected width at midrange. It models established full loading/unloading branches, not speed-dependent lag or partial-reversal minor loops.</p></details>`;
+      panel.insertAdjacentHTML(
+        "beforeend",
+        '<div class="actions"><button id="hysteresis-up">Sweep loading to 10 bar</button><button id="hysteresis-down">Sweep unloading to 0 bar</button></div><p class="note">Moving the pressure slider selects the direction of movement; the approach selector can also compare branches at an unchanged input. Sweep buttons traverse the complete branch.</p>',
+      );
+      let lastInput = 5,
+        history = [];
       update = () => {
+        const current = +$("#hysteresis-input", panel).value;
+        if (current !== lastInput)
+          $("#direction", panel).value = current > lastInput ? "up" : "down";
+        lastInput = current;
         const x = +$("#hysteresis-input", panel).value,
           w = +$("#hysteresis-width", panel).value,
           d = $("#direction", panel).value,
           out = hysteresis(x, w, d);
+        history.push([x, out]);
+        history = history.slice(-250);
         $("#static-result", panel).innerHTML =
           plot({
             title: "Different readings at the same pressure",
@@ -303,6 +358,7 @@ export function staticLab(root) {
               { name: "Loading ↑", fn: (x) => hysteresis(x, w, "up") },
               { name: "Unloading ↓", fn: (x) => hysteresis(x, w, "down") },
               { name: "Ideal", fn: (x) => x, dashed: true },
+              { name: "Your sweep", values: history },
             ],
             points: [{ x, y: out }],
           }) +
@@ -313,6 +369,27 @@ export function staticLab(root) {
           ]) +
           `<p class="observation">At ${fmt(x, 1)} bar, loading reads ${fmt(hysteresis(x, w, "up"))} bar and unloading reads ${fmt(hysteresis(x, w, "down"))} bar. A single increasing-input calibration can miss this difference.</p>`;
       };
+      for (const [id, direction, end] of [
+        ["hysteresis-up", "up", 10],
+        ["hysteresis-down", "down", 0],
+      ])
+        $("#" + id, panel).addEventListener("click", () => {
+          history = [];
+          const start = direction === "up" ? 0 : 10;
+          lastInput = start;
+          $("#direction", panel).value = direction;
+          for (let i = 0; i <= 50; i++) {
+            const x = start + ((end - start) * i) / 50;
+            history.push([
+              x,
+              hysteresis(x, +$("#hysteresis-width", panel).value, direction),
+            ]);
+          }
+          $("#hysteresis-input", panel).value = end;
+          $("#hysteresis-input", panel).dispatchEvent(
+            new Event("input", { bubbles: true }),
+          );
+        });
     }
     if (mode === "dead") {
       panel.innerHTML = `<div class="scenario"><strong>You reverse a mechanical drive, but the pointer stays still.</strong><p>First increase input to engage one flank. Reverse in small increments and watch the pointer wait while the clearance is taken up.</p></div>${bench("Mechanical backlash / dead space", `${range("dead-input", "Drive input", 0, 10, 0.1, 5, "mm")}${range("clearance", "Total reversal clearance", 0, 2, 0.1, 1, "mm")}<div class="actions"><button id="dead-minus" type="button">−0.1 mm</button><button id="dead-plus" type="button">+0.1 mm</button><button id="dead-reset" type="button">Reset mechanism</button></div><p class="note">Output initially equals the input. Changing clearance resets the centered engagement state.</p>`)}<details class="explain"><summary>Explain dead space vs threshold</summary><p>Dead space is an input interval over which output does not respond. Mechanical clearance creates a dead region on reversal: movement must reach the opposite flank before transmission resumes. Unlike the initial threshold near zero, this dead region can occur anywhere along the range. Backlash is one source of hysteresis.</p></details>`;
@@ -374,6 +451,31 @@ export function staticLab(root) {
         );
       });
     }
+    const checkpoints = {
+      sensitivity: [
+        "sensitivity-units",
+        "A 100 mV change for a 4°C input change gives…",
+        ["25 V/°C", "25 mV/°C"],
+        1,
+        "Sensitivity = 100 mV / 4°C = 25 mV/°C = 0.025 V/°C. Keep the output unit when dividing.",
+      ],
+      drift: [
+        "drift-check",
+        "Temperature shifts the whole calibration line upward without changing slope. This is…",
+        ["Zero drift / bias", "Sensitivity drift"],
+        0,
+        "A parallel shift is zero drift. A changed slope is sensitivity or scale-factor drift.",
+      ],
+      threshold: [
+        "resolution-check",
+        "Two instruments have identical digital steps; one has a constant +2 kPa bias. Which changed?",
+        ["Resolution", "Closeness to the reference / accuracy"],
+        1,
+        "The bias affects accuracy. Identical quantization steps do not imply identical calibration error.",
+      ],
+    };
+    if (checkpoints[mode])
+      panel.insertAdjacentHTML("beforeend", question(...checkpoints[mode]));
     wireControls(panel, update);
     wireQuestions(panel);
   }

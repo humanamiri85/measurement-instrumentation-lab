@@ -1,3 +1,4 @@
+import { aerospaceCase, aiChallenge } from "./chapter2-activities.mjs";
 import { $, $$, fmt, metrics } from "./ui.mjs";
 import { rangeMetrics, firstOrder } from "./models.mjs";
 const candidates = [
@@ -35,7 +36,7 @@ const candidates = [
     cost: "$420 · 24 V supply · excellent steady readings",
   },
 ];
-export function challenge(root) {
+export function instrumentSelection(root) {
   root.innerHTML = `<span class="eyebrow">Chapter synthesis / Engineering challenge</span><h1>Make the engineering call.</h1><p class="lead">The instrument with the best-looking accuracy number is not automatically the right instrument. Build a decision from static limits, environment, and response speed.</p><div class="scenario"><strong>Application: pressure control for a small filtration line</strong><p>Normal pressure is 0.8–1.2 bar; startup may reach 1.6 bar. The controller must distinguish a 0.04 bar change and read within ±0.05 bar of the final pressure 0.5 s after a 0.4 bar step. The enclosure can warm by 20°C. You need automatic logging. Budget: $250.</p><p class="note">For this exercise, add bounded static error, worst-case temperature drift, half a resolution step, and first-order residual lag conservatively. Treat the response and drift specifications as valid over this operating range.</p></div><div class="candidates">${candidates.map((c) => `<article class="candidate" id="candidate-${c.id}"><h2 style="font-size:1.1rem">${c.name}</h2><dl><dt>Range</dt><dd>0–${c.range} bar</dd><dt>Accuracy bound</dt><dd>±${c.accuracy}% FS</dd><dt>Resolution</dt><dd>${c.resolution} bar</dd><dt>First-order τ</dt><dd>${c.tau} s</dd><dt>Residual zero-drift bound</dt><dd>±${c.drift} bar/°C</dd><dt>Type / interface</dt><dd>${c.type}</dd><dt>Cost / operation</dt><dd>${c.cost}</dd></dl><button data-candidate="${c.id}" type="button" aria-pressed="false">Evaluate instrument ${c.id.toUpperCase()}</button></article>`).join("")}</div><div class="bench"><div class="bench-head"><h2>Decision worksheet</h2><span>SPECIFICATION → EVIDENCE</span></div><div class="bench-body"><div id="candidate-analysis"><p>Select a candidate to compute its error budget and inspect the tradeoffs.</p></div><fieldset class="question"><legend>Which evidence supports your recommendation? Select all that apply.</legend><div class="check-list"><label><input type="checkbox" id="reason-range">The range covers startup pressure with useful headroom.</label><label><input type="checkbox" id="reason-total">The combined error bound at 0.5 s meets ±0.05 bar.</label><label><input type="checkbox" id="reason-resolution">Resolution is fine enough to distinguish a 0.04 bar change.</label><label><input type="checkbox" id="reason-interface">The output supports automatic logging within the budget.</label><label><input type="checkbox" id="reason-digits">The most displayed digits guarantee the best accuracy.</label></div></fieldset><label for="justification"><strong>Your engineering justification</strong></label><p class="note" id="justification-help">Mention at least one numerical limit and one tradeoff. Your text stays in this page; it is not sent anywhere or automatically graded.</p><textarea id="justification" aria-describedby="justification-help" placeholder="I recommend … because … . I would verify … before commissioning."></textarea><div class="actions"><button id="submit-decision" class="primary" type="button">Review my decision</button><button id="export-decision" type="button">Download decision notes</button></div><div id="decision-feedback" aria-live="polite"></div></div></div><details class="explain"><summary>Explain what still needs checking in a real purchase</summary><p>Confirm overload rating, media compatibility, installation effects, environmental limits, power and interfaces, reference traceability, and calibration status. The specifications here intentionally simplify procurement. A worst-case bound is not a statistical uncertainty estimate, and response time is not the same as sampling rate.</p></details>`;
   let chosen = null;
   $$("[data-candidate]", root).forEach((button) =>
@@ -87,4 +88,29 @@ export function challenge(root) {
     a.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   });
+}
+
+export function challenge(root, initialPanel = "aircraft") {
+  root.innerHTML = `<span class="eyebrow">Chapter synthesis / Aerospace and evidence</span><h1>From the bench to the flight deck.</h1><p class="lead">Apply blocks A–D to an aircraft measurement chain, make an instrument-selection decision, then critically inspect an AI-assisted data analysis.</p><div class="tabs" role="group" aria-label="Integrated engineering activities"><button data-synthesis="aircraft" aria-pressed="true">Pitot-static case</button><button data-synthesis="selection" aria-pressed="false">Instrument selection</button><button data-synthesis="ai" aria-pressed="false">AI Engineering Challenge</button></div><div id="synthesis-panel"></div>`;
+  const panel = $("#synthesis-panel", root);
+  function show(mode) {
+    $$("[data-synthesis]", root).forEach((b) =>
+      b.setAttribute("aria-pressed", String(b.dataset.synthesis === mode)),
+    );
+    if (mode === "aircraft") aerospaceCase(panel);
+    else if (mode === "ai") aiChallenge(panel);
+    else {
+      instrumentSelection(panel);
+      const heading = $("h1", panel);
+      heading.outerHTML = "<h2>" + heading.innerHTML + "</h2>";
+    }
+  }
+  $$("[data-synthesis]", root).forEach((b) =>
+    b.addEventListener("click", () => show(b.dataset.synthesis)),
+  );
+  show(
+    ["aircraft", "selection", "ai"].includes(initialPanel)
+      ? initialPanel
+      : "aircraft",
+  );
 }
