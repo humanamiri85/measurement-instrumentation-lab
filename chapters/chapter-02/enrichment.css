@@ -1,0 +1,89 @@
+/* Chapter-only teaching visuals; global identity and navigation styles are retained. */
+.chain-steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 18px 0;
+}
+.chain-steps button {
+  flex: 1 1 145px;
+  font-size: 0.83rem;
+  text-align: left;
+  justify-content: flex-start;
+}
+.range-scale {
+  margin: 30px 8px;
+}
+.range-track {
+  position: relative;
+  height: 18px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--accent-light) 0 9%,
+    var(--line) 9% 10%
+  );
+}
+.range-track span {
+  position: absolute;
+  transform: translateX(-50%);
+  top: -28px;
+  color: var(--ink);
+  font-size: 24px;
+}
+.range-endpoints {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  font-size: 0.9rem;
+}
+.target-sketch {
+  max-width: 400px;
+  margin: 25px auto;
+  padding: 18px;
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+.target-sketch figcaption {
+  font-size: 0.85rem;
+  font-weight: 650;
+}
+.target-sketch svg {
+  display: block;
+  width: 100%;
+}
+.target-sketch text {
+  font: 12px system-ui;
+  fill: var(--muted);
+}
+.target-sketch .note {
+  margin: 10px 0 0;
+}
+#sampling-result {
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: white;
+}
+#synthesis-panel textarea {
+  margin: 10px 0 20px;
+}
+#synthesis-panel blockquote {
+  margin: 16px 0;
+}
+#synthesis-panel [hidden] {
+  display: none;
+}
+@media (max-width: 430px) {
+  .target-sketch {
+    padding: 12px;
+  }
+  .target-sketch text {
+    font-size: 14px;
+  }
+  #sampling-result {
+    padding: 16px;
+  }
+}

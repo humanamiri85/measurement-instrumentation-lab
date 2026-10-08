@@ -12,8 +12,11 @@ import {
   wireQuestions,
 } from "./ui.mjs";
 import { quantize } from "./models.mjs";
+import { sampledSignal } from "./chapter2-models.mjs";
+import { measurementBridge } from "./chapter2-activities.mjs";
 export function introduction(root) {
-  root.innerHTML = `<span class="eyebrow">2.1 / Start with a decision</span><h1>Three instruments.<br>One pressure line.</h1><p class="lead">A small process line normally runs at 1 bar. A display shows 1.00 bar. Is that enough evidence to trust the reading?</p><div class="scenario"><strong>Your assignment</strong><p>Monitor pressures from 0.8 to 1.2 bar, detect a 0.04 bar change, and report a reading within 0.05 bar after a change. Choose what you would investigate first.</p></div><div class="two-col"><article class="info-card"><span class="eyebrow">Instrument A</span><h3 style="margin-top:12px">A rugged mechanical gauge</h3><p>0–10 bar · ±1% full scale · 0.2 bar scale divisions · local pointer · no external power</p></article><article class="info-card"><span class="eyebrow">Instrument B</span><h3 style="margin-top:12px">A process transmitter</h3><p>0–2 bar · ±1% full scale · 0.01 bar display step · powered signal output · time constant 0.15 s</p></article></div>${question("intro-choice", "Predict: which instrument deserves a closer look for this job?", ["A: a wide range makes it safer", "B: a closer range and finer steps", "Either: both measure pressure"], 1, "B is a better starting point: its full-scale error is ±0.02 bar, versus ±0.10 bar for A. You must still check speed, operating limits, drift, and calibration. A label saying “1%” is incomplete without its basis.")}<div class="observation"><strong>The question throughout this chapter:</strong> What does this instrument let you conclude, and what might it hide?</div><details class="explain"><summary>After your prediction: the two sides of instrument selection</summary><p><strong>Type</strong> tells you how energy enters, how the measurement is obtained, and how the result reaches the user or controller. <strong>Performance</strong> tells you how close, stable, fine, and fast that result can be. Static characteristics apply after settling; dynamic characteristics describe the journey to that reading.</p></details>`;
+  root.innerHTML = `<span class="eyebrow">Block A / 2.1 · Physical quantity to information</span><h1>Two instruments.<br>One pressure line.</h1><p class="lead">A small process line normally runs at 1 bar. A display shows 1.00 bar. Is that enough evidence to trust the reading?</p><div id="intro-bridge"></div><div class="scenario"><strong>Your assignment</strong><p>Monitor pressures from 0.8 to 1.2 bar, detect a 0.04 bar change, and report a reading within 0.05 bar after a change. Choose what you would investigate first.</p></div><div class="two-col"><article class="info-card"><span class="eyebrow">Instrument A</span><h3 style="margin-top:12px">A rugged mechanical gauge</h3><p>0–10 bar · ±1% full scale · 0.2 bar scale divisions · local pointer · no external power</p></article><article class="info-card"><span class="eyebrow">Instrument B</span><h3 style="margin-top:12px">A process transmitter</h3><p>0–2 bar · ±1% full scale · 0.01 bar display step · powered signal output · time constant 0.15 s</p></article></div>${question("intro-choice", "Predict: which instrument deserves a closer look for this job?", ["A: a wide range makes it safer", "B: a closer range and finer steps", "Either: both measure pressure"], 1, "B is a better starting point: its full-scale error is ±0.02 bar, versus ±0.10 bar for A. You must still check speed, operating limits, drift, and calibration. A label saying “1%” is incomplete without its basis.")}<div class="observation"><strong>The question throughout this chapter:</strong> What does this instrument let you conclude, and what might it hide?</div><details class="explain"><summary>After your prediction: the two sides of instrument selection</summary><p><strong>Type</strong> tells you how energy enters, how the measurement is obtained, and how the result reaches the user or controller. <strong>Performance</strong> tells you how close, stable, fine, and fast that result can be. Static characteristics apply after settling; dynamic characteristics describe the journey to that reading.</p></details>`;
+  measurementBridge($("#intro-bridge", root));
   wireQuestions(root);
 }
 const tabs = [
@@ -23,15 +26,15 @@ const tabs = [
   ["signal", "Indicate or transmit"],
   ["smart", "Smart instruments"],
 ];
-export function instrumentTypes(root) {
-  root.innerHTML = `<span class="eyebrow">2.2 / Instrument type explorer</span><h1>Follow the measurement.</h1><p class="lead">A single instrument belongs to several classifications at once. Explore one distinction at a time; do not infer accuracy from a digital display or a “smart” label.</p><div class="tabs" role="group" aria-label="Instrument classification experiments">${tabs.map(([id, label], i) => `<button data-type="${id}" aria-pressed="${i === 0}">${label}</button>`).join("")}</div><div id="type-panel"></div>`;
+export function instrumentTypes(root, initialMode = "energy") {
+  root.innerHTML = `<span class="eyebrow">Block A / 2.2 · How instruments work</span><h1>Follow the measurement.</h1><p class="lead">A single instrument belongs to several classifications at once. Explore one distinction at a time; do not infer accuracy from a digital display or a “smart” label.</p><div class="tabs" role="group" aria-label="Instrument classification experiments">${tabs.map(([id, label], i) => `<button data-type="${id}" aria-pressed="${i === 0}">${label}</button>`).join("")}</div><div id="type-panel"></div>`;
   const panel = $("#type-panel", root);
   function show(mode) {
     $$("[data-type]", root).forEach((b) =>
       b.setAttribute("aria-pressed", String(b.dataset.type === mode)),
     );
     if (mode === "energy") {
-      panel.innerHTML = `<div class="scenario"><strong>A remote tank needs a level measurement.</strong><p>Predict what happens to the electrical output if the supply is switched off. Then change the level and supply voltage.</p></div><div class="bench"><div class="bench-head"><h2>Energy-path bench</h2><span>PASSIVE / ACTIVE</span></div><div class="bench-body"><div class="bench-grid"><div class="controls">${range("level", "Tank level", 0, 100, 1, 50, "%")}${range("supply", "External supply", 0, 12, 0.5, 5, "V")}<p class="note">A float moves an ideal potentiometer; output voltage is supply × level fraction.</p></div><div id="energy-result"></div></div></div></div>${question("energy-q", "The powered float/potentiometer system is…", ["Active: level modulates external energy", "Passive: the float moves by itself"], 0, "Here the output signal energy comes from an external supply. A mechanical pressure gauge is passive in this chapter’s terminology because measurand energy moves its pointer. These terms can be reversed in other sensor conventions; always identify the energy path.")}<details class="explain"><summary>Explain the tradeoff</summary><p>Simple passive indicators often cost less and work without a power supply. External energy in an active instrument creates opportunities to amplify or condition small signals and improve usable resolution. More supply voltage does not grant unlimited resolution: noise, heating, safety limits, and conversion steps still matter.</p></details>`;
+      panel.innerHTML = `<div class="two-col"><article class="info-card"><h3>Active instrument</h3><p>The measurand modulates externally supplied energy. A fuel-tank float moves a powered potentiometer; the electrical output energy comes from its supply.</p></article><article class="info-card"><h3>Passive instrument</h3><p>The measured quantity supplies the output energy. Pressure deforms a Bourdon tube and moves a mechanical gauge pointer without an external supply.</p></article></div><div class="scenario"><strong>A remote tank needs a level measurement.</strong><p>Predict what happens to the electrical output if the supply is switched off. Then change the level and supply voltage.</p></div><div class="bench"><div class="bench-head"><h2>Energy-path bench</h2><span>PASSIVE / ACTIVE</span></div><div class="bench-body"><div class="bench-grid"><div class="controls">${range("level", "Tank level", 0, 100, 1, 50, "%")}${range("supply", "External supply", 0, 12, 0.5, 5, "V")}<p class="note">A float moves an ideal potentiometer; output voltage is supply × level fraction.</p></div><div id="energy-result"></div></div></div></div>${question("energy-q", "The powered float/potentiometer system is…", ["Active: level modulates external energy", "Passive: the float moves by itself"], 0, "Here the output signal energy comes from an external supply. A mechanical pressure gauge is passive in this chapter’s terminology because measurand energy moves its pointer. These terms can be reversed in other sensor conventions; always identify the energy path.")}<details class="explain"><summary>Explain the tradeoff</summary><p>Simple passive indicators often cost less and work without a power supply. External energy in an active instrument creates opportunities to amplify or condition small signals and improve usable resolution. More supply voltage does not grant unlimited resolution: noise, heating, safety limits, and conversion steps still matter.</p></details>`;
       wireControls(panel, () => {
         const level = +$("#level", panel).value,
           supply = +$("#supply", panel).value;
@@ -73,7 +76,7 @@ export function instrumentTypes(root) {
           ["0.1", "0.1 bar"],
           ["0.01", "0.01 bar"],
         ],
-      )}</div><div id="digital-result"></div></div></div></div><details class="explain"><summary>Explain why more digits are not more accuracy</summary><p>A digital output has discrete representable values. In this ideal nearest-step model, rounding error is at most half a step. An analog indication changes continuously, but a person can only resolve a finite number of pointer positions. Neither representation alone tells you the calibration error.</p></details>`;
+      )}${range("sample-interval", "Sampling interval", 0.1, 1, 0.05, 0.25, "s")}</div><div id="digital-result"></div></div></div></div><div id="sampling-result"></div><details class="explain"><summary>Explain why more digits are not more accuracy</summary><p>A digital output has discrete representable values. In this ideal nearest-step model, rounding error is at most half a step. An analog indication changes continuously, but a person can only resolve a finite number of pointer positions. Neither representation alone tells you the calibration error.</p></details>`;
       wireControls(panel, () => {
         const input = +$("#analog-input", panel).value,
           step = +$("#digital-step", panel).value,
@@ -91,10 +94,29 @@ export function instrumentTypes(root) {
               points: [{ x: input, y: out }],
             },
           )}`;
+        const interval = +$("#sample-interval", panel).value;
+        const trace = sampledSignal(interval, step);
+        $("#sampling-result", panel).innerHTML =
+          plot({
+            title: "Continuous, sampled, and quantized pressure",
+            xLabel: "Time / s",
+            yLabel: "Pressure / bar",
+            xMax: 4,
+            yMax: 10,
+            curves: [
+              { name: "Continuous signal", fn: trace.signal },
+              {
+                name: "Sample-and-hold digital value",
+                values: trace.held,
+              },
+            ],
+            points: trace.samples.map((s) => ({ x: s.t, y: s.analog })),
+          }) +
+          `<p class="observation">Dots show analog values sampled every ${fmt(interval)} s (${fmt(1 / interval, 1)} samples/s). The held trace rounds each sample to ${step} bar. Sampling limits when information is acquired; quantization limits how finely it is represented. At a 1 s interval this particular 0.5 Hz signal is sampled only at zero crossings and its variation is missed.</p><p class="note">A mechanical analog scale also has finite reading discrimination, set by divisions, pointer width, and the observer. A small digital step still does not guarantee small calibration error.</p>`;
       });
     }
     if (mode === "signal") {
-      panel.innerHTML = `<div class="scenario"><strong>An operator cannot stand beside the tank all night.</strong><p>Build a measurement chain that lets a controller record pressure automatically.</p></div><div class="bench"><div class="bench-head"><h2>Measurement chain</h2><span>DISPLAY / SIGNAL</span></div><div class="bench-body">${range("chain-pressure", "Pressure", 0, 10, 0.1, 4, "bar")}${select(
+      panel.innerHTML = `<div class="scenario"><strong>A flight-deck indication and an air-data input serve different users.</strong><p>Reuse this Measurement Chain bench to compare a local indication with a signal a controller can acquire. Aircraft transducers similarly send signals to an air-data computer; a cockpit display alone is not a measurement interface.</p></div><div class="bench"><div class="bench-head"><h2>Measurement chain</h2><span>DISPLAY / SIGNAL</span></div><div class="bench-body">${range("chain-pressure", "Pressure", 0, 10, 0.1, 4, "bar")}${select(
         "chain-mode",
         "Instrument output",
         [
@@ -110,7 +132,7 @@ export function instrumentTypes(root) {
       });
     }
     if (mode === "smart") {
-      panel.innerHTML = `<div class="scenario"><strong>The transmitter sits in a hot enclosure.</strong><p>Can an onboard processor use a temperature measurement to correct a known offset? Change the environment, then enable compensation.</p></div><div class="bench"><div class="bench-head"><h2>Compensation workstation</h2><span>KNOWN OFFSET MODEL</span></div><div class="bench-body"><div class="controls">${range("smart-temp", "Environment", 20, 60, 1, 40, "°C")}${select(
+      panel.innerHTML = `<div class="chain"><span>Sensor</span><b aria-hidden="true">→</b><span>Conditioning</span><b aria-hidden="true">→</b><span>ADC</span><b aria-hidden="true">→</b><span>Processor</span><b aria-hidden="true">→</b><span>Communication + diagnostics</span></div><p class="note">A smart aircraft pressure module may store calibration coefficients, compensate temperature effects, communicate readings, and flag supply or sensor health faults. Diagnostics have limits; they do not replace reference checks.</p><div class="scenario"><strong>The transmitter sits in a hot enclosure.</strong><p>Can an onboard processor use a temperature measurement to correct a known offset? Change the environment, then enable compensation.</p></div><div class="bench"><div class="bench-head"><h2>Compensation workstation</h2><span>KNOWN OFFSET MODEL</span></div><div class="bench-body"><div class="controls">${range("smart-temp", "Environment", 20, 60, 1, 40, "°C")}${select(
         "smart-mode",
         "Processing",
         [
@@ -136,5 +158,5 @@ export function instrumentTypes(root) {
   $$("[data-type]", root).forEach((b) =>
     b.addEventListener("click", () => show(b.dataset.type)),
   );
-  show("energy");
+  show(tabs.some(([id]) => id === initialMode) ? initialMode : "energy");
 }
