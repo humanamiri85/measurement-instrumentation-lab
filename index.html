@@ -1,13 +1,121 @@
 <!doctype html>
 <html lang="en">
-<head><meta charset="utf-8"><link rel="icon" href="assets/favicon.svg" type="image/svg+xml"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="An interactive undergraduate engineering lab for instrument types, static and dynamic performance, and calibration."><title>Measurement &amp; Instrumentation Interactive Lab</title><link rel="stylesheet" href="assets/styles.css"></head>
-<body>
-<a class="skip" href="#main">Skip to content</a>
-<header class="site-header"><a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">M/I</span><span>Measurement &amp; Instrumentation<small>Interactive Lab</small></span></a><span class="header-meta">UNDERGRADUATE ENGINEERING · EXPERIMENT → UNDERSTAND</span></header>
-<main id="main" class="home">
-<section class="hero"><div><span class="eyebrow">The measurement is only the beginning</span><h1>Understand the instrument.<br>Trust the measurement.</h1><p>Turn a specification into an engineering decision. Operate virtual instruments, investigate misleading readings, and learn what makes a measurement useful.</p><a class="button primary" href="chapters/chapter-02/index.html#intro">Enter Chapter 2 <span aria-hidden="true">→</span></a><p class="note" style="margin-top:15px">No account. No installation. Learn at your own pace.</p></div><figure class="hero-art"><figcaption class="eyebrow">Workstation 02 / response analysis</figcaption><svg viewBox="0 0 420 265" role="img" aria-label="A first-order sensor gradually approaches a sudden change in temperature."><path class="axis" d="M45 25V220H400"/><path class="muted-line" d="M45 65H400 M45 140H400"/><path d="M45 210H90V65H400" class="muted-line"/><path d="M45 210H90 C125 210 128 130 180 100 S280 65 400 65"/><text x="45" y="245">0</text><text x="360" y="245">time / s</text><text x="130" y="48">Target temperature</text><text x="190" y="132">Sensor response</text><text x="10" y="215">20°</text><text x="10" y="70">80°</text></svg><p style="font-size:.85rem;color:#c1d3d6;margin:10px 0 0">A correct final reading can still arrive too late.</p></figure></section>
-<section class="chapter-card" aria-labelledby="chapter-title"><div><span class="eyebrow">Complete interactive chapter · 6 stages</span><h2 id="chapter-title" style="margin-top:10px">02 — Instrument types &amp; performance characteristics</h2><p>Choose a sensor. Test its limits. Trace its response. Calibrate it. Make the final call.</p><div class="tags"><span class="tag">Instrument types</span><span class="tag">Static performance</span><span class="tag">Dynamic response</span><span class="tag">Calibration</span></div></div><a class="button" href="chapters/chapter-02/index.html#overview">Explore the chapter →</a></section>
-<section aria-label="Learning method" class="learning-loop"><div><strong>01 · Predict</strong><small>Commit to an expectation.</small></div><div><strong>02 · Interact</strong><small>Change the instrument.</small></div><div><strong>03 · Observe</strong><small>Read the evidence.</small></div><div><strong>04 · Explain</strong><small>Connect cause and effect.</small></div><div><strong>05 · Decide</strong><small>Choose for the application.</small></div></section>
-<p class="note">Designed for lecture demonstrations, laboratory discussions, and independent study. Based on the concepts in Chapter 2 of <cite>Measurement and Instrumentation: Theory and Application</cite>, third edition, Alan S. Morris and Reza Langari. All explanations, models, and graphics here are original teaching material.</p>
-</main><footer class="footer">Measurement &amp; Instrumentation Interactive Lab · A virtual bench for real engineering judgment.</footer>
-</body></html>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="An interactive undergraduate engineering lab for instrument types, static and dynamic performance, and calibration."
+    />
+    <title>Measurement &amp; Instrumentation Interactive Lab</title>
+    <link rel="stylesheet" href="assets/styles.css" />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="site-header">
+      <a class="brand" href="index.html"
+        ><span class="brand-mark" aria-hidden="true">M/I</span
+        ><span
+          >Measurement &amp; Instrumentation<small>Interactive Lab</small></span
+        ></a
+      ><span class="header-meta"
+        >UNDERGRADUATE ENGINEERING · EXPERIMENT → UNDERSTAND</span
+      >
+    </header>
+    <main id="main" class="home">
+      <section class="hero">
+        <div>
+          <span class="eyebrow">The measurement is only the beginning</span>
+          <h1>Understand the instrument.<br />Trust the measurement.</h1>
+          <p>
+            Turn a specification into an engineering decision. Operate virtual
+            instruments, investigate misleading readings, and learn what makes a
+            measurement useful.
+          </p>
+          <a class="button primary" href="chapters/chapter-02/index.html#intro"
+            >Enter Chapter 2 <span aria-hidden="true">→</span></a
+          >
+          <p class="note" style="margin-top: 15px">
+            No account. No installation. Learn at your own pace.
+          </p>
+        </div>
+        <figure class="hero-art">
+          <figcaption class="eyebrow">
+            Workstation 02 / response analysis
+          </figcaption>
+          <svg
+            viewBox="0 0 420 265"
+            role="img"
+            aria-label="A first-order sensor gradually approaches a sudden change in temperature."
+          >
+            <path class="axis" d="M45 25V220H400" />
+            <path class="muted-line" d="M45 65H400 M45 140H400" />
+            <path d="M45 210H90V65H400" class="muted-line" />
+            <path
+              d="M45 210H90 L93.10 203.25 L96.20 196.81 L99.30 190.67 L102.40 184.82 L105.50 179.24 L108.60 173.92 L111.70 168.84 L114.80 164.01 L117.90 159.40 L121.00 155.00 L124.10 150.81 L127.20 146.81 L130.30 143.00 L133.40 139.37 L136.50 135.91 L139.60 132.60 L142.70 129.45 L145.80 126.45 L148.90 123.59 L152.00 120.86 L155.10 118.26 L158.20 115.78 L161.30 113.42 L164.40 111.16 L167.50 109.01 L170.60 106.96 L173.70 105.01 L176.80 103.14 L179.90 101.37 L183.00 99.67 L186.10 98.06 L189.20 96.52 L192.30 95.05 L195.40 93.65 L198.50 92.32 L201.60 91.04 L204.70 89.83 L207.80 88.68 L210.90 87.57 L214.00 86.52 L217.10 85.52 L220.20 84.56 L223.30 83.65 L226.40 82.78 L229.50 81.96 L232.60 81.17 L235.70 80.41 L238.80 79.69 L241.90 79.01 L245.00 78.36 L248.10 77.74 L251.20 77.14 L254.30 76.58 L257.40 76.04 L260.50 75.52 L263.60 75.03 L266.70 74.57 L269.80 74.12 L272.90 73.70 L276.00 73.29 L279.10 72.91 L282.20 72.54 L285.30 72.19 L288.40 71.85 L291.50 71.53 L294.60 71.23 L297.70 70.94 L300.80 70.66 L303.90 70.40 L307.00 70.15 L310.10 69.91 L313.20 69.68 L316.30 69.46 L319.40 69.25 L322.50 69.05 L325.60 68.87 L328.70 68.69 L331.80 68.51 L334.90 68.35 L338.00 68.19 L341.10 68.05 L344.20 67.90 L347.30 67.77 L350.40 67.64 L353.50 67.52 L356.60 67.40 L359.70 67.29 L362.80 67.18 L365.90 67.08 L369.00 66.98 L372.10 66.89 L375.20 66.80 L378.30 66.72 L381.40 66.64 L384.50 66.56 L387.60 66.49 L390.70 66.42 L393.80 66.35 L396.90 66.29 L400.00 66.23"
+            />
+            <text x="45" y="245">0</text>
+            <text x="360" y="245">time / s</text>
+            <text x="130" y="48">Target temperature</text>
+            <text x="190" y="132">Sensor response</text>
+            <text x="10" y="215">20°</text>
+            <text x="10" y="70">80°</text>
+          </svg>
+          <p style="font-size: 0.85rem; color: #c1d3d6; margin: 10px 0 0">
+            A correct final reading can still arrive too late.
+          </p>
+        </figure>
+      </section>
+      <section class="chapter-card" aria-labelledby="chapter-title">
+        <div>
+          <span class="eyebrow">Complete interactive chapter · 6 stages</span>
+          <h2 id="chapter-title" style="margin-top: 10px">
+            02 — Instrument types &amp; performance characteristics
+          </h2>
+          <p>
+            Choose a sensor. Test its limits. Trace its response. Calibrate it.
+            Make the final call.
+          </p>
+          <div class="tags">
+            <span class="tag">Instrument types</span
+            ><span class="tag">Static performance</span
+            ><span class="tag">Dynamic response</span
+            ><span class="tag">Calibration</span>
+          </div>
+        </div>
+        <a class="button" href="chapters/chapter-02/index.html#overview"
+          >Explore the chapter →</a
+        >
+      </section>
+      <section aria-label="Learning method" class="learning-loop">
+        <div>
+          <strong>01 · Predict</strong><small>Commit to an expectation.</small>
+        </div>
+        <div>
+          <strong>02 · Interact</strong><small>Change the instrument.</small>
+        </div>
+        <div>
+          <strong>03 · Observe</strong><small>Read the evidence.</small>
+        </div>
+        <div>
+          <strong>04 · Explain</strong><small>Connect cause and effect.</small>
+        </div>
+        <div>
+          <strong>05 · Decide</strong><small>Choose for the application.</small>
+        </div>
+      </section>
+      <p class="note">
+        Designed for lecture demonstrations, laboratory discussions, and
+        independent study. Based on the concepts in Chapter 2 of
+        <cite>Measurement and Instrumentation: Theory and Application</cite>,
+        third edition, Alan S. Morris and Reza Langari. All explanations,
+        models, and graphics here are original teaching material.
+      </p>
+    </main>
+    <footer class="footer">
+      Measurement &amp; Instrumentation Interactive Lab · A virtual bench for
+      real engineering judgment.
+    </footer>
+  </body>
+</html>
