@@ -1,3 +1,4 @@
+import { tagBench } from "./chapter2-polish.mjs";
 import {
   $,
   $$,
@@ -476,6 +477,10 @@ export function staticLab(root) {
     };
     if (checkpoints[mode])
       panel.insertAdjacentHTML("beforeend", question(...checkpoints[mode]));
+    tagBench(
+      panel,
+      ["scatter", "sensitivity", "drift"].includes(mode) ? "CORE" : "EXPLORE",
+    );
     wireControls(panel, update);
     wireQuestions(panel);
   }

@@ -1,3 +1,4 @@
+import { tagBench } from "./chapter2-polish.mjs";
 import {
   $,
   $$,
@@ -153,6 +154,7 @@ export function instrumentTypes(root, initialMode = "energy") {
           `<p class="observation">${smart ? "The processor subtracts the predicted temperature offset." : "The basic converter reports the offset together with the pressure."} This is ideal compensation, not a real-device performance claim.</p>`;
       });
     }
+    tagBench(panel, mode === "energy" ? "CORE" : "EXPLORE");
     wireQuestions(panel);
   }
   $$("[data-type]", root).forEach((b) =>
