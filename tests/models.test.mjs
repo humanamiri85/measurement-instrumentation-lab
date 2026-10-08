@@ -201,3 +201,53 @@ test("AI dataset supports an affine diagnosis and preserves residual evidence", 
     1,
   );
 });
+
+// Final polish classifications do not change instrument models.
+import {
+  acceptance,
+  reviewEvidence,
+  faultDiagnosis,
+} from "../assets/js/chapter2-polish.mjs";
+test("acceptance distinguishes marginal compliance, robust margin, and failure", () => {
+  assert.equal(acceptance(0.0492695973389, 0.05).label, "PASS — MARGINAL");
+  assert.equal(acceptance(0.04, 0.05).label, "MEETS LIMIT");
+  assert.equal(acceptance(0.051, 0.05).label, "DOES NOT MEET LIMIT");
+  assert.equal(acceptance(0.05, 0.05).marginal, true);
+});
+test("evidence matrix distinguishes supported effects from untested hypotheses", () => {
+  assert.ok(
+    reviewEvidence({
+      offset: "supported",
+      scale: "supported",
+      hysteresis: "additional",
+      lag: "additional",
+    }).every((h) => h.correct),
+  );
+  const review = reviewEvidence({
+    offset: "supported",
+    scale: "supported",
+    hysteresis: "unsupported",
+    lag: "supported",
+  });
+  assert.equal(review[2].correct, false);
+  assert.equal(review[3].correct, false);
+  assert.match(review[2].reason, /decreasing/);
+  assert.match(review[3].reason, /time-resolved/);
+});
+test("fault diagnoses connect static, pitot, and lag symptoms to the right channel", () => {
+  for (const s of ["static", "pitot", "dynamic"]) {
+    assert.equal(faultDiagnosis(s, s).correct, true);
+    assert.equal(
+      faultDiagnosis(s, s === "static" ? "pitot" : "static").correct,
+      false,
+    );
+  }
+  assert.match(
+    faultDiagnosis("pitot", "pitot").reason,
+    /not directly affected/,
+  );
+  assert.match(
+    faultDiagnosis("dynamic", "dynamic").reason,
+    /steady-state calibration is correct/,
+  );
+});

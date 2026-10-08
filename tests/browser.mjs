@@ -88,9 +88,11 @@ try {
       );
     }
     for (const detail of await page.locator("details").all()) {
+      const wasOpen = (await detail.getAttribute("open")) !== null;
+      if (wasOpen) await detail.locator("summary").click();
       await detail.locator("summary").click();
       assert.equal(await detail.getAttribute("open"), "");
-      await detail.locator("summary").click();
+      if (!wasOpen) await detail.locator("summary").click();
     }
     for (const input of await page.locator("input[type=range]:enabled").all()) {
       for (const attr of ["min", "max"])
@@ -449,8 +451,10 @@ try {
   assert.match(await page.locator("#ai-prompt").inputValue(), /reference_kPa/);
   await page.locator("#ai-reference").click();
   assert.match(await page.locator("#ai-analysis").textContent(), /1.01986/);
-  await page.locator("#ai-offset").check();
-  await page.locator("#ai-scale").check();
+  await page.locator("#ai-offset").selectOption("supported");
+  await page.locator("#ai-scale").selectOption("supported");
+  await page.locator("#ai-hysteresis").selectOption("additional");
+  await page.locator("#ai-lag").selectOption("additional");
   await page
     .locator("#ai-conclusion")
     .fill(
@@ -461,7 +465,7 @@ try {
     await page.locator("#ai-feedback").textContent(),
     /consistent with the data/,
   );
-  await page.locator("#ai-lag").check();
+  await page.locator("#ai-lag").selectOption("supported");
   await page.locator("#ai-review").click();
   assert.match(await page.locator("#ai-feedback").textContent(), /Revisit/);
   const aiDownload = page.waitForEvent("download");
@@ -521,6 +525,185 @@ try {
           repo,
           `test-results/${label}-bench-${stage}-${mode || "all"}.png`,
         ),
+        fullPage: true,
+      });
+    }
+  }
+  // Final pedagogical polish: guidance, evidence boundaries, and compact diagnosis.
+  await page.goto(base + "chapters/chapter-02/index.html#intro");
+  assert.match(
+    await page.locator("#intro-bridge").textContent(),
+    /Desired information: altitude/,
+  );
+  assert.match(
+    await page.locator("#intro-bridge").textContent(),
+    /direct measurand.*static pressure/i,
+  );
+  assert.equal(
+    await page.locator("#intro-bridge .learning-badge").textContent(),
+    "CORE",
+  );
+  await page.locator('[data-chain-step="1"]').click();
+  assert.match(
+    await page.locator("#bridge-description").textContent(),
+    /Direct measurand/,
+  );
+  await page.goto(base + "chapters/chapter-02/index.html#types");
+  for (const [mode, expected] of [
+    ["energy", "CORE"],
+    ["balance", "EXPLORE"],
+    ["digital", "EXPLORE"],
+  ]) {
+    await page.locator(`[data-type=${mode}]`).click();
+    assert.equal(
+      await page
+        .locator("#type-panel .bench-head .learning-badge")
+        .textContent(),
+      expected,
+    );
+  }
+  await page.goto(base + "chapters/chapter-02/index.html#static");
+  for (const [mode, expected] of [
+    ["scatter", "CORE"],
+    ["sensitivity", "CORE"],
+    ["drift", "CORE"],
+    ["repeat", "EXPLORE"],
+    ["threshold", "EXPLORE"],
+    ["linearity", "EXPLORE"],
+    ["hysteresis", "EXPLORE"],
+    ["dead", "EXPLORE"],
+  ]) {
+    await page.locator(`[data-static=${mode}]`).click();
+    assert.equal(
+      await page
+        .locator("#static-panel .bench-head .learning-badge")
+        .textContent(),
+      expected,
+    );
+  }
+  await page.goto(base + "chapters/chapter-02/index.html#dynamic");
+  assert.equal(
+    await page.locator(".bench-head .learning-badge").textContent(),
+    "CORE",
+  );
+  assert.match(
+    await page.locator(".controls").textContent(),
+    /EXPLORE.*Second-order/s,
+  );
+  await page.goto(base + "chapters/chapter-02/index.html#calibration");
+  assert.equal(
+    await page.locator("#calibration-errors .learning-badge").textContent(),
+    "EXPLORE",
+  );
+  assert.equal(
+    await page.locator(".bench-head .learning-badge").first().textContent(),
+    "CORE",
+  );
+  await page.goto(base + "chapters/chapter-02/index.html#challenge/selection");
+  await page.locator("[data-candidate=b]").click();
+  assert.match(
+    await page.locator("#candidate-analysis").textContent(),
+    /PASS — MARGINAL/,
+  );
+  assert.equal(
+    await page
+      .locator("#candidate-analysis [data-acceptance]")
+      .getAttribute("data-acceptance"),
+    "marginal",
+  );
+  assert.match(
+    await page.locator("#candidate-analysis").textContent(),
+    /0.0493 bar/,
+  );
+  assert.match(
+    await page.locator("#candidate-analysis").textContent(),
+    /adequate design margin/,
+  );
+  await page.locator("[data-candidate=a]").click();
+  assert.equal(
+    await page
+      .locator("#candidate-analysis [data-acceptance]")
+      .getAttribute("data-acceptance"),
+    "fails",
+  );
+  await page.goto(base + "chapters/chapter-02/index.html#challenge/aircraft");
+  for (const scenario of ["static", "pitot", "dynamic"]) {
+    await page.locator("#fault-scenario").selectOption(scenario);
+    await page.locator(`[data-fault=${scenario}]`).click();
+    assert.match(
+      await page.locator("#fault-feedback").textContent(),
+      /^Correct/,
+    );
+    await page
+      .locator(`[data-fault=${scenario === "static" ? "pitot" : "static"}]`)
+      .click();
+    assert.match(
+      await page.locator("#fault-feedback").textContent(),
+      /^Reconsider/,
+    );
+  }
+  await audit("fault diagnosis");
+  await page.goto(base + "chapters/chapter-02/index.html#challenge/ai");
+  for (const [id, value] of [
+    ["offset", "supported"],
+    ["scale", "supported"],
+    ["hysteresis", "additional"],
+    ["lag", "additional"],
+  ])
+    await page.locator("#ai-" + id).selectOption(value);
+  await page.locator("#ai-review").click();
+  assert.match(
+    await page.locator("#ai-feedback").textContent(),
+    /consistent with the data/,
+  );
+  assert.match(
+    await page.locator("#ai-feedback").textContent(),
+    /Absence of evidence is not evidence of absence/,
+  );
+  for (const id of ["hysteresis", "lag"]) {
+    await page.locator("#ai-" + id).selectOption("unsupported");
+    await page.locator("#ai-review").click();
+    assert.match(
+      await page.locator("#ai-feedback").textContent(),
+      /Revisit classification/,
+    );
+    await page.locator("#ai-" + id).selectOption("additional");
+  }
+  await audit("evidence matrix");
+  await page.goto(base + "chapters/chapter-02/index.html#overview");
+  assert.match(
+    await page.locator("main").textContent(),
+    /CORE activities contain the minimum learning path/,
+  );
+  for (const [width, height, label] of [
+    [1280, 800, "desktop"],
+    [390, 844, "phone"],
+  ]) {
+    await page.setViewportSize({ width, height });
+    for (const mode of ["aircraft", "selection", "ai"]) {
+      await page.goto(
+        base + `chapters/chapter-02/index.html#challenge/${mode}`,
+      );
+      if (mode === "selection")
+        await page.locator("[data-candidate=b]").click();
+      if (mode === "ai") {
+        for (const [id, value] of [
+          ["offset", "supported"],
+          ["scale", "supported"],
+          ["hysteresis", "additional"],
+          ["lag", "additional"],
+        ])
+          await page.locator("#ai-" + id).selectOption(value);
+        await page.locator("#ai-review").click();
+      }
+      assert.ok(
+        await page.evaluate(
+          () => document.documentElement.scrollWidth <= innerWidth,
+        ),
+        `Polish overflow ${width} ${mode}`,
+      );
+      await page.screenshot({
+        path: resolve(repo, `test-results/${label}-polish-${mode}.png`),
         fullPage: true,
       });
     }

@@ -87,3 +87,48 @@
     padding: 16px;
   }
 }
+.learning-badge {
+  display: inline-block;
+  font: 700 0.65rem system-ui;
+  letter-spacing: 0.08em;
+  padding: 3px 7px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+.learning-badge.core {
+  background: var(--accent-light);
+  color: var(--accent);
+  border-color: var(--accent);
+}
+.learning-badge.explore {
+  background: var(--paper);
+  color: var(--muted);
+}
+.marginal-result {
+  border-left: 4px solid #954218;
+  background: #fff3e6;
+}
+.marginal-result strong {
+  color: #854015;
+}
+.evidence-matrix {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 20px;
+}
+.evidence-matrix .control {
+  margin-bottom: 10px;
+}
+.evidence-feedback {
+  padding-left: 20px;
+}
+.evidence-feedback li {
+  margin: 10px 0;
+}
+@media (max-width: 740px) {
+  .evidence-matrix {
+    grid-template-columns: 1fr;
+  }
+}

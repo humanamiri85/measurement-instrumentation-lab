@@ -1,4 +1,12 @@
 import {
+  badge,
+  tagBench,
+  failureDiagnosis,
+  evidenceHypotheses,
+  evidenceOptions,
+  reviewEvidence,
+} from "./chapter2-polish.mjs";
+import {
   $,
   $$,
   range,
@@ -21,13 +29,13 @@ export function measurementBridge(root) {
   const steps = [
     [
       "Atmospheric state",
-      "Measurand",
+      "Desired information",
       "Altitude is the desired information. Pressure is the quantity directly sensed; deriving altitude requires an atmospheric model and a pressure reference.",
     ],
     [
       "Static pressure",
-      "Sensor",
-      "The aircraft static port samples ambient static pressure. Installation or flow errors can affect the pressure before any electrical instrument sees it.",
+      "Direct measurand",
+      "The directly measured physical quantity is static pressure. The aircraft static port samples it. Installation or flow errors can affect the pressure before any electrical instrument sees it.",
     ],
     [
       "Sensing diaphragm",
@@ -47,7 +55,12 @@ export function measurementBridge(root) {
     [
       "ADC + processor",
       "Acquisition and processing",
-      "The ADC samples and quantizes voltage; the processor applies calibration and a pressure-to-altitude relationship. ADC resolution is one limit, not an accuracy guarantee.",
+      "The ADC samples and quantizes voltage; the processor applies the pressure calibration. ADC resolution is one limit, not an accuracy guarantee.",
+    ],
+    [
+      "Pressure-altitude calculation",
+      "Inferred information",
+      "A standard-atmosphere calculation infers pressure altitude from calibrated static pressure. Altitude is not directly sensed by this pressure instrument.",
     ],
     [
       "Cockpit display",
@@ -55,7 +68,8 @@ export function measurementBridge(root) {
       "The result is displayed as pressure altitude. Pilots may instead use an altimeter setting to obtain indicated altitude; weather and temperature affect the relationship with true altitude.",
     ],
   ];
-  root.innerHTML = `<section class="bench" aria-labelledby="bridge-title"><div class="bench-head"><h2 id="bridge-title">From physical quantity to information</h2><span>A1 / MEASUREMENT CHAIN</span></div><div class="bench-body"><p>A static-pressure instrument does not sense “altitude” directly. Follow the conversion from the atmosphere to a cockpit indication.</p>${range("bridge-altitude", "Standard-atmosphere altitude", 0, 3000, 100, 1000, "m")}<div class="chain-steps" role="group" aria-label="Explore measurement-chain elements">${steps.map(([name], i) => `<button data-chain-step="${i}" aria-pressed="${i === 0}">${i + 1}. ${name}</button>`).join("")}</div><div id="bridge-reading"></div><div class="observation" id="bridge-description" aria-live="polite"></div><p class="note">This compact conceptual bridge uses an ideal standard troposphere. It is not a navigation instrument or a weather correction model.</p><a class="button" href="#types/signal">Explore the existing Measurement Chain activity →</a></div></section>`;
+  root.innerHTML = `<section class="bench" aria-labelledby="bridge-title"><div class="bench-head"><h2 id="bridge-title">From physical quantity to information</h2><span>A1 / MEASUREMENT CHAIN</span></div><div class="bench-body"><p><strong>Desired information: altitude.</strong><br><strong>Directly measured physical quantity (direct measurand): static pressure.</strong></p><p>Some engineering quantities are inferred from a different directly measured quantity. A static-pressure instrument does not sense “altitude” directly. Follow the conversion from the atmosphere to a cockpit indication.</p>${range("bridge-altitude", "Standard-atmosphere altitude", 0, 3000, 100, 1000, "m")}<div class="chain-steps" role="group" aria-label="Explore measurement-chain elements">${steps.map(([name], i) => `<button data-chain-step="${i}" aria-pressed="${i === 0}">${i + 1}. ${name}</button>`).join("")}</div><div id="bridge-reading"></div><div class="observation" id="bridge-description" aria-live="polite"></div><p class="note">This compact conceptual bridge uses an ideal standard troposphere. It is not a navigation instrument or a weather correction model.</p><a class="button" href="#types/signal">Explore the existing Measurement Chain activity →</a></div></section>`;
+  tagBench(root, "CORE");
   let selected = 0;
   function update() {
     const h = +$("#bridge-altitude", root).value,
@@ -111,10 +125,13 @@ export function aerospaceCase(root) {
       ]) +
       `<p class="observation">${data.impact < 0 ? "The measured pressure difference is negative: this simplified physical model cannot infer a real speed. Investigate channel bias or a faulty pressure connection." : b === 0 ? "With no channel bias, the ideal pressure-altitude and speed values agree with the inputs." : b > 0 ? "A positive static-pressure bias makes calculated altitude lower and the inferred speed smaller." : "A negative static-pressure bias makes calculated altitude higher and the inferred speed larger."} Calibration should check both channels, not just the final display.</p>`;
   });
+  tagBench(root, "CORE");
+  root.insertAdjacentHTML("beforeend", '<div id="failure-diagnosis"></div>');
+  failureDiagnosis($("#failure-diagnosis", root));
   wireQuestions(root);
 }
 export function aiChallenge(root) {
-  root.innerHTML = `<span class="eyebrow">Independent evidence / AI Engineering Challenge</span><h2>AI is an assistant, not the measurement authority.</h2><p>Inspect six synthetic steady-state pressure readings before consulting an AI assistant. Then challenge its explanation using numbers and physical reasoning. No external API or account is needed for the built-in review.</p><div class="data-table" tabindex="0" role="region" aria-label="Synthetic calibration dataset"><table><caption>Synthetic calibration data / one increasing-pressure run</caption><thead><tr><th>Reference / kPa</th><th>Measured / kPa</th><th>Error / kPa</th></tr></thead><tbody>${aiDataset.map((r) => `<tr><td>${r.reference}</td><td>${r.measured.toFixed(1)}</td><td>${fmt(r.measured - r.reference, 1)}</td></tr>`).join("")}</tbody></table></div>${plot({ title: "Inspect the data before fitting", xLabel: "Reference pressure / kPa", yLabel: "Measured pressure / kPa", xMax: 100, yMax: 110, curves: [{ name: "Ideal", fn: (x) => x, dashed: true }], points: aiDataset.map((r) => ({ x: r.reference, y: r.measured })) })}<label for="ai-prediction"><strong>1. Your independent diagnosis</strong></label><textarea id="ai-prediction" placeholder="Look at zero, high-end error, and scatter. What can and cannot be inferred?"></textarea><div class="actions"><button id="ai-copy" type="button">Prepare dataset prompt</button><button id="ai-reference" type="button">Reveal numerical reference analysis</button></div><label class="sr-only" for="ai-prompt">Prompt to use with an optional AI assistant</label><textarea id="ai-prompt" readonly hidden></textarea><p id="ai-prompt-status" class="note" aria-live="polite"></p><div id="ai-analysis" aria-live="polite"></div><h3 style="margin-top:24px">2. Critically evaluate an answer</h3><p class="note">Use an assistant of your choice, or inspect the deliberately flawed sample below. The sample is authored teaching material, not a live AI response.</p><blockquote class="observation">“The increasing error proves hysteresis. Subtracting exactly 2 kPa makes every reading accurate, and the sensor must respond slowly.”</blockquote><label for="ai-response"><strong>Optional: paste the AI answer you received</strong></label><textarea id="ai-response" placeholder="Pasted text stays in this page and is never submitted."></textarea><fieldset class="question"><legend>Which claims are supported by this dataset?</legend><div class="check-list"><label><input type="checkbox" id="ai-offset">The zero-point reading suggests an offset.</label><label><input type="checkbox" id="ai-scale">Error growth suggests a scale-factor effect in addition to offset.</label><label><input type="checkbox" id="ai-hysteresis">A single increasing run proves hysteresis.</label><label><input type="checkbox" id="ai-lag">Steady-state pairs establish a time constant.</label></div></fieldset><label for="ai-conclusion"><strong>3. Your final evidence-based conclusion</strong></label><textarea id="ai-conclusion" placeholder="Quote a numerical estimate and propose the next measurement needed to test an uncertain claim."></textarea><div class="actions"><button class="primary" id="ai-review" type="button">Review the evidence</button><button id="ai-download" type="button">Download learning notes</button></div><div id="ai-feedback" aria-live="polite"></div>`;
+  root.innerHTML = `<span class="eyebrow">Independent evidence / AI Engineering Challenge</span><h2>AI is an assistant, not the measurement authority. ${badge("EXPLORE")}</h2><p>Inspect six synthetic steady-state pressure readings before consulting an AI assistant. Then challenge its explanation using numbers and physical reasoning. No external API or account is needed for the built-in review.</p><div class="data-table" tabindex="0" role="region" aria-label="Synthetic calibration dataset"><table><caption>Synthetic calibration data / one increasing-pressure run</caption><thead><tr><th>Reference / kPa</th><th>Measured / kPa</th><th>Error / kPa</th></tr></thead><tbody>${aiDataset.map((r) => `<tr><td>${r.reference}</td><td>${r.measured.toFixed(1)}</td><td>${fmt(r.measured - r.reference, 1)}</td></tr>`).join("")}</tbody></table></div>${plot({ title: "Inspect the data before fitting", xLabel: "Reference pressure / kPa", yLabel: "Measured pressure / kPa", xMax: 100, yMax: 110, curves: [{ name: "Ideal", fn: (x) => x, dashed: true }], points: aiDataset.map((r) => ({ x: r.reference, y: r.measured })) })}<label for="ai-prediction"><strong>1. Your independent diagnosis</strong></label><textarea id="ai-prediction" placeholder="Look at zero, high-end error, and scatter. What can and cannot be inferred?"></textarea><div class="actions"><button id="ai-copy" type="button">Prepare dataset prompt</button><button id="ai-reference" type="button">Reveal numerical reference analysis</button></div><label class="sr-only" for="ai-prompt">Prompt to use with an optional AI assistant</label><textarea id="ai-prompt" readonly hidden></textarea><p id="ai-prompt-status" class="note" aria-live="polite"></p><div id="ai-analysis" aria-live="polite"></div><h3 style="margin-top:24px">2. Critically evaluate an answer</h3><p class="note">Use an assistant of your choice, or inspect the deliberately flawed sample below. The sample is authored teaching material, not a live AI response.</p><blockquote class="observation">“The increasing error proves hysteresis. Subtracting exactly 2 kPa makes every reading accurate, and the sensor must respond slowly.”</blockquote><label for="ai-response"><strong>Optional: paste the AI answer you received</strong></label><textarea id="ai-response" placeholder="Pasted text stays in this page and is never submitted."></textarea><fieldset class="question"><legend>Evidence matrix / classify each hypothesis</legend><div class="evidence-matrix">${evidenceHypotheses.map((h) => select("ai-" + h.id, h.name, evidenceOptions)).join("")}</div><p class="note">Separate what the current data support from what still needs testing. Absence of evidence is not evidence of absence.</p></fieldset><label for="ai-conclusion"><strong>3. Your final evidence-based conclusion</strong></label><textarea id="ai-conclusion" placeholder="Quote a numerical estimate and propose the next measurement needed to test an uncertain claim."></textarea><div class="actions"><button class="primary" id="ai-review" type="button">Review the evidence</button><button id="ai-download" type="button">Download learning notes</button></div><div id="ai-feedback" aria-live="polite"></div>`;
   $("#ai-copy", root).addEventListener("click", () => {
     const text =
       "Independently analyze this synthetic steady-state calibration dataset (reference_kPa, measured_kPa):\n" +
@@ -143,17 +160,17 @@ export function aiChallenge(root) {
       `<p class="observation">A line fit suggests offset and scale error. Residuals describe departure from that line; this one run cannot establish repeatability, uncertainty, hysteresis, or response speed. Zero-only correction leaves a high-end error.</p>`;
   });
   $("#ai-review", root).addEventListener("click", () => {
-    const supported =
-      $("#ai-offset", root).checked &&
-      $("#ai-scale", root).checked &&
-      !$("#ai-hysteresis", root).checked &&
-      !$("#ai-lag", root).checked;
+    const classifications = Object.fromEntries(
+      evidenceHypotheses.map((h) => [h.id, $("#ai-" + h.id, root).value]),
+    );
+    const evidence = reviewEvidence(classifications),
+      supported = evidence.every((h) => h.correct);
     const conclusion = $("#ai-conclusion", root).value.trim();
     $("#ai-feedback", root).innerHTML =
-      `<div class="observation"><strong>${supported ? "Your selected evidence is consistent with the data." : "Revisit what these measurements can establish."}</strong><p>At zero, the error is +2.0 kPa; at 100 kPa it is +3.9 kPa. Offset alone cannot explain the growth. An affine fit gives about 2.0 kPa offset and 1.02 kPa/kPa slope. An unloading run is needed for hysteresis; timed input/output data are needed for lag; repeated observations and a reference assessment are needed for uncertainty.</p><p>${conclusion.length >= 40 ? "Compare your conclusion with these numerical checks. Your writing is retained but is not automatically graded." : "Write a fuller conclusion with a numerical estimate and a proposed verification measurement."} An AI answer must earn trust through evidence, not fluent wording.</p></div>`;
+      `<div class="observation"><strong>${supported ? "Your selected evidence is consistent with the data." : "Revisit what these measurements can establish."}</strong><p>The reference fit gives about 2.0 kPa offset and 1.02 kPa/kPa slope. Estimating uncertainty also requires repeated observations and a reference assessment.</p><p>${conclusion.length >= 40 ? "Compare your conclusion with these numerical checks. Your writing is retained but is not automatically graded." : "Write a fuller conclusion with a numerical estimate and a proposed verification measurement."} An AI answer must earn trust through evidence, not fluent wording.</p><ul class="evidence-feedback">${evidence.map((h) => `<li><strong>${h.name}: ${h.correct ? "Correct classification" : "Revisit classification"}.</strong> ${h.reason}</li>`).join("")}</ul><p><strong>Absence of evidence is not evidence of absence.</strong> Additional measurements are needed before concluding that hysteresis or lag is absent.</p></div>`;
   });
   $("#ai-download", root).addEventListener("click", () => {
-    const text = `AI Engineering Challenge\n\nDataset (reference_kPa,measured_kPa)\n${aiDataset.map((r) => `${r.reference},${r.measured}`).join("\n")}\n\nIndependent diagnosis:\n${$("#ai-prediction", root).value}\n\nAI answer:\n${$("#ai-response", root).value}\n\nFinal conclusion:\n${$("#ai-conclusion", root).value}\n`;
+    const text = `AI Engineering Challenge\n\nDataset (reference_kPa,measured_kPa)\n${aiDataset.map((r) => `${r.reference},${r.measured}`).join("\n")}\n\nIndependent diagnosis:\n${$("#ai-prediction", root).value}\n\nAI answer:\n${$("#ai-response", root).value}\n\nEvidence matrix:\n${evidenceHypotheses.map((h) => h.name + ": " + $("#ai-" + h.id, root).selectedOptions[0].textContent).join("\n")}\n\nFinal conclusion:\n${$("#ai-conclusion", root).value}\n`;
     const url = URL.createObjectURL(new Blob([text], { type: "text/plain" })),
       a = document.createElement("a");
     a.href = url;
