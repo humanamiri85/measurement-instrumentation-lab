@@ -1,0 +1,15 @@
+{
+  "name": "measurement-instrumentation-interactive-lab",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Original interactive engineering learning activities for Chapter 2",
+  "scripts": {
+    "test": "node --test tests/models.test.mjs",
+    "test:browser": "node tests/browser.mjs",
+    "preview": "python3 -m http.server 8000 --bind 127.0.0.1"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.11.1",
+    "playwright": "1.58.2"
+  }
+}
