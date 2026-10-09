@@ -123,7 +123,7 @@ The simple models make mechanisms inspectable and do not specify real sensor har
 | Existing chapters preserved                  | Chapter 2 suite passed unchanged; Chapter 1 absent from checkout                                |
 | Responsive behavior tested                   | 28 Chapter 3 layouts plus focused desktop/phone visual review                                   |
 | Documentation updated                        | Audit, objectives, models, instructor key, tests, limits and future work recorded               |
-| Reviewable pull request                      | Depends on GitHub API access; actual creation result is reported separately                     |
+| Reviewable pull request                      | Blocked: GitHub GraphQL API returned Forbidden; branch pushed, prepared PR description saved in chapter-03-pr.md                     |
 
 ### Instructor review checklist
 
