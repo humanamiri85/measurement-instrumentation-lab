@@ -1,0 +1,1498 @@
+[
+  {
+    "id": "example-4-1",
+    "kind": "example",
+    "number": "4.1",
+    "page": 79,
+    "title": "Compare source measurement sets A, B and C",
+    "section": "4.3",
+    "type": "multiStats",
+    "args": {
+      "sets": [
+        [398, 420, 394, 416, 404, 408, 400, 420, 396, 413, 430],
+        [409, 406, 402, 407, 405, 404, 407, 404, 407, 407, 408],
+        [
+          409, 406, 402, 407, 405, 404, 407, 404, 407, 407, 408, 406, 410, 406,
+          405, 408, 406, 409, 406, 405, 409, 406, 407
+        ]
+      ]
+    },
+    "unit": "mm",
+    "note": "Recompute each actual mean from its data; do not use rounded means in squared deviations. A has minimum 394 mm, not the later printed 396 mm.",
+    "status": "Audited with clarified assumptions"
+  },
+  {
+    "id": "example-4-2",
+    "kind": "example",
+    "number": "4.2",
+    "page": 81,
+    "title": "Histogram of the 23-length sample",
+    "section": "4.4",
+    "type": "hist",
+    "args": {
+      "data": [
+        409, 406, 402, 407, 405, 404, 407, 404, 407, 407, 408, 406, 410, 406,
+        405, 408, 406, 409, 406, 405, 409, 406, 407
+      ],
+      "bins": 5,
+      "start": 401.5,
+      "width": 2
+    },
+    "unit": "mm",
+    "note": "",
+    "status": "Independently verified"
+  },
+  {
+    "id": "example-4-3",
+    "kind": "example",
+    "number": "4.3",
+    "page": 88,
+    "title": "Gaussian readings outside one SD",
+    "section": "4.6",
+    "type": "normal",
+    "args": {
+      "mu": 0,
+      "sigma": 1,
+      "ranges": [[-1, 1]],
+      "outside": true
+    },
+    "unit": "",
+    "note": "",
+    "status": "Independently verified"
+  },
+  {
+    "id": "example-4-4",
+    "kind": "example",
+    "number": "4.4",
+    "page": 90,
+    "title": "Alloy freezing-point mean intervals",
+    "section": "4.7",
+    "type": "meanData",
+    "args": {
+      "data": [
+        519.5, 521.7, 518.9, 520.3, 521.4, 520.1, 519.8, 520.2, 518.6, 521.5
+      ],
+      "levels": [0.68, 0.954, 0.997]
+    },
+    "unit": "°C",
+    "note": "Use the statement dataset (520.1 and 520.2); the printed working table alters readings. Display proper Student-t intervals for estimated SD, not claim ±1/2/3 SEM has those exact coverages at n=10.",
+    "status": "Audited with clarified assumptions"
+  },
+  {
+    "id": "example-4-5",
+    "kind": "example",
+    "number": "4.5",
+    "page": 92,
+    "title": "Single mass reading with reference scatter",
+    "section": "4.8",
+    "type": "singleSummary",
+    "args": {
+      "reading": 105.6,
+      "mean": 0,
+      "reference": 0,
+      "sd": 0.46,
+      "n": 30,
+      "level": 0.95
+    },
+    "unit": "kg",
+    "note": "The stated SEM 0.08 is rounded. Compare textbook 1.96(s+0.08)=1.0584 kg with the normal-reference finite-sample prediction half-width; the heuristic is not an exact 95% prediction interval.",
+    "status": "Audited with clarified assumptions"
+  },
+  {
+    "id": "example-4-6",
+    "kind": "example",
+    "number": "4.6",
+    "page": 92,
+    "title": "Transistor manufacturing yield",
+    "section": "4.9",
+    "type": "normal",
+    "args": {
+      "mu": 20,
+      "sigma": 2,
+      "ranges": [
+        [19.8, 20.2],
+        [17, null]
+      ],
+      "count": 100000
+    },
+    "unit": "gain",
+    "note": "10⁵ transistors, not 105. The standardized inner limits are ±0.1, not the intermediate printed ±0.2.",
+    "status": "Audited with clarified assumptions"
+  },
+  {
+    "id": "example-4-7",
+    "kind": "example",
+    "number": "4.7",
+    "page": 95,
+    "title": "Chi-square right-tail lookup, n=10",
+    "section": "4.10",
+    "type": "chiQuantile",
+    "args": {
+      "df": 9,
+      "rightTail": 0.05
+    },
+    "unit": "",
+    "note": "",
+    "status": "Independently verified"
+  },
+  {
+    "id": "example-4-8",
+    "kind": "example",
+    "number": "4.8",
+    "page": 96,
+    "title": "Chi-square right-tail lookup, n=21",
+    "section": "4.10",
+    "type": "chiQuantile",
+    "args": {
+      "df": 20,
+      "rightTail": 0.005
+    },
+    "unit": "",
+    "note": "",
+    "status": "Independently verified"
+  },
+  {
+    "id": "example-4-9",
+    "kind": "example",
+    "number": "4.9",
+    "page": 97,
+    "title": "Rod variance and SD intervals",
+    "section": "4.10",
+    "type": "variance",
+    "args": {
+      "n": 10,
+      "variance": 16.3,
+      "levels": [0.95]
+    },
+    "unit": "mm",
+    "note": "Variance unit is mm², not mm. Interval quantiles use left-tail CDF probabilities; do not confuse the textbook right-tail labels.",
+    "status": "Audited with clarified assumptions"
+  },
+  {
+    "id": "example-4-10",
+    "kind": "example",
+    "number": "4.10",
+    "page": 98,
+    "title": "Brick variance at three confidence levels",
+    "section": "4.10",
+    "type": "variance",
+    "args": {
+      "n": 25,
+      "variance": 6.8,
+      "levels": [0.9, 0.95, 0.99]
+    },
+    "unit": "mm",
+    "note": "Variance unit is mm²; retain (n−1)s²=163.2 throughout, including the 99% calculation.",
+    "status": "Audited with clarified assumptions"
+  },
+  {
+    "id": "example-4-11",
+    "kind": "example",
+    "number": "4.11",
+    "page": 102,
+    "title": "Audit the source mass-distribution fit",
+    "section": "4.11.3",
+    "type": "gof",
+    "args": {
+      "data": [
+        487, 504, 501, 515, 491, 496, 482, 502, 508, 494, 505, 501, 485, 503,
+        507, 494, 489, 501, 510, 491, 503, 492, 483, 501, 500, 493, 505, 501,
+        517, 500, 494, 503, 500, 488, 496, 500, 519, 499, 495, 490, 503, 500,
+        497, 492, 510, 506, 497, 499, 489, 506, 502, 484, 495, 498, 502, 496,
+        512, 504, 490, 497, 488, 503, 512, 497, 480, 509, 496, 513, 499, 502,
+        487, 499, 505, 493, 498, 508, 492, 498, 486, 511, 499, 504, 495, 500,
+        484, 513, 509, 497, 505, 510, 516, 499, 495, 507, 498, 514, 506, 500,
+        508, 494
+      ],
+      "cuts": [484.5, 489.5, 494.5, 499.5, 504.5, 509.5, 514.5],
+      "mu": 499.53,
+      "sigma": 8.388851428105536
+    },
+    "unit": "g",
+    "note": "Use tail-complete bins, grouped MLE and expected-count merging; df=k−3. Failure to reject is not confidence that Gaussian is true.",
+    "status": "Audited with clarified assumptions"
+  },
+  {
+    "id": "example-4-12",
+    "kind": "example",
+    "number": "4.12",
+    "page": 104,
+    "title": "Audit the source mass-distribution fit",
+    "section": "4.11.3",
+    "type": "gof",
+    "args": {
+      "data": [
+        503, 509, 495, 500, 504, 491, 496, 499, 501, 489, 507, 501, 486, 497,
+        500, 493, 499, 505, 501, 495, 499, 515, 505, 492, 499, 502, 507, 500,
+        498, 507, 494, 499, 506, 501, 493, 498, 505, 499, 496, 512, 498, 502,
+        508, 500, 497, 485, 504, 499, 502, 496, 483, 501, 510, 494, 498, 505,
+        491, 499, 503, 495, 502, 481, 498, 503, 508, 497, 511, 490, 506, 500,
+        508, 504, 517, 494, 487, 505, 499, 509, 492, 484, 500, 507, 501, 496,
+        510, 503, 498, 490, 501, 492, 497, 489, 502, 495, 491, 500, 513, 499,
+        494, 498
+      ],
+      "cuts": [484.5, 489.5, 494.5, 499.5, 504.5, 509.5, 514.5],
+      "mu": 499.39,
+      "sigma": 6.9788931425369665
+    },
+    "unit": "g",
+    "note": "Rendered p106 confirms 0.091 versus 0.91. Printed rounded contributions total about 0.091, but its df and confidence interpretation are also wrong. This audited workflow covers both tails, fits grouped MLE, merges low expected counts, and reports a p-value, never probability of normality.",
+    "status": "Audited with clarified assumptions"
+  },
+  {
+    "id": "example-4-13",
+    "kind": "example",
+    "number": "4.13",
+    "page": 107,
+    "title": "Screen a new pressure run against a reference",
+    "section": "4.12",
+    "type": "flags",
+    "args": {
+      "data": [
+        4.35, 4.46, 4.39, 4.34, 4.41, 4.52, 4.44, 4.37, 4.41, 4.33, 4.39, 4.47,
+        4.42, 4.59, 4.45, 4.38, 4.43, 4.36, 4.48, 4.45
+      ],
+      "mean": 4.41,
+      "sd": 0.05
+    },
+    "unit": "bar",
+    "note": "A ±3s flag invites investigation; it does not prove instrument failure or justify automatic deletion.",
+    "status": "Audited with clarified assumptions"
+  },
+  {
+    "id": "example-4-14",
+    "kind": "example",
+    "number": "4.14",
+    "page": 108,
+    "title": "Investigate a suspicious 8.1 reading",
+    "section": "4.12",
+    "type": "outlierStudy",
+    "args": {
+      "data": [
+        10.4, 9.9, 9.7, 9.6, 10.1, 10.3, 9.8, 10, 10.2, 9.5, 9.8, 10.1, 10.3,
+        8.1, 9.7, 10.2, 10.3, 9.7, 9.9, 10.2
+      ],
+      "index": 13
+    },
+    "unit": "units",
+    "note": "The comparison excludes the candidate only provisionally. Preserve all original readings and justify any permanent exclusion.",
+    "status": "Audited with clarified assumptions"
+  },
+  {
+    "id": "example-4-15",
+    "kind": "example",
+    "number": "4.15",
+    "page": 112,
+    "title": "Student-t tail convention",
+    "section": "4.13",
+    "type": "tQuantile",
+    "args": {
+      "df": 14,
+      "level": 0.975
+    },
+    "unit": "",
+    "note": "Printed 2.145 is the 97.5th percentile (one-sided); central 97.5% coverage needs the 98.75th percentile. Both conventions are shown.",
+    "status": "Audited with clarified assumptions"
+  },
+  {
+    "id": "example-4-16",
+    "kind": "example",
+    "number": "4.16",
+    "page": 113,
+    "title": "Casting mean diameter interval",
+    "section": "4.13",
+    "type": "mean",
+    "args": {
+      "mean": 105.4,
+      "sd": 1.9,
+      "n": 15,
+      "levels": [0.95]
+    },
+    "unit": "mm",
+    "note": "",
+    "status": "Independently verified"
+  },
+  {
+    "id": "example-4-17",
+    "kind": "example",
+    "number": "4.17",
+    "page": 114,
+    "title": "Double-glazing mean gap interval",
+    "section": "4.13",
+    "type": "mean",
+    "args": {
+      "mean": 19.7,
+      "sd": 0.6,
+      "n": 6,
+      "levels": [0.99]
+    },
+    "unit": "mm",
+    "note": "The later z comparison switches to 95%. Compare z and t at the same 99% level instead.",
+    "status": "Audited with clarified assumptions"
+  },
+  {
+    "id": "example-4-18",
+    "kind": "example",
+    "number": "4.18",
+    "page": 116,
+    "title": "Series resistors: bounds versus uncertainty",
+    "section": "4.14.2",
+    "type": "prop",
+    "args": {
+      "model": "sum",
+      "values": [220, 330],
+      "errors": [4.4, 6.6]
+    },
+    "unit": "Ω",
+    "note": "Tolerance limits add to 11 Ω worst-case. RSS 7.9322 Ω is a standard uncertainty only if the supplied numbers are standard uncertainties; uniform tolerance models yield RSS/√3.",
+    "status": "Audited with clarified assumptions"
+  },
+  {
+    "id": "example-4-19",
+    "kind": "example",
+    "number": "4.19",
+    "page": 116,
+    "title": "Pressure difference near zero",
+    "section": "4.14.2",
+    "type": "prop",
+    "args": {
+      "model": "difference",
+      "values": [10, 9.5],
+      "errors": [0.01, 0.0095]
+    },
+    "unit": "bar",
+    "note": "Compare worst-case bounds with conditional standard uncertainty; RSS is not a maximum.",
+    "status": "Audited with clarified assumptions"
+  },
+  {
+    "id": "example-4-20",
+    "kind": "example",
+    "number": "4.20",
+    "page": 117,
+    "title": "Power error from voltage and current",
+    "section": "4.14.2",
+    "type": "relativeProp",
+    "args": {
+      "errors": [0.01, 0.02],
+      "operation": "product"
+    },
+    "unit": "",
+    "note": "Report 3% first-order worst case, 2.236% conditional RSS; exact upper product bound is 3.02%.",
+    "status": "Audited with clarified assumptions"
+  },
+  {
+    "id": "example-4-21",
+    "kind": "example",
+    "number": "4.21",
+    "page": 118,
+    "title": "Density error from mass and volume",
+    "section": "4.14.2",
+    "type": "relativeProp",
+    "args": {
+      "errors": [0.02, 0.03],
+      "operation": "quotient"
+    },
+    "unit": "",
+    "note": "Use 0.03, not the printed intermediate 0.003. RSS 3.606% is conditional; first-order bound is 5%.",
+    "status": "Audited with clarified assumptions"
+  },
+  {
+    "id": "example-4-22",
+    "kind": "example",
+    "number": "4.22",
+    "page": 119,
+    "title": "Density of a rectangular block",
+    "section": "4.14.3",
+    "type": "prop",
+    "args": {
+      "model": "density",
+      "values": [20, 0.1, 0.2, 0.3],
+      "errors": [0.1, 0.001, 0.002, 0.003]
+    },
+    "unit": "kg/m³",
+    "note": "First-order bounded relative error is 3.5%; independent standard-uncertainty RSS is 1.803%. They answer different questions.",
+    "status": "Audited with clarified assumptions"
+  },
+  {
+    "id": "problem-4-1",
+    "kind": "problem",
+    "number": "4.1",
+    "page": 121,
+    "title": "Consumption summaries",
+    "section": "4.3",
+    "type": "stats",
+    "args": {
+      "data": [
+        25.5, 30.3, 31.1, 29.6, 32.4, 39.4, 28.9, 30, 33.3, 31.4, 29.5, 30.5,
+        31.7, 33, 29.2
+      ]
+    },
+    "unit": "source consumption units",
+    "note": "",
+    "status": "Independently verified"
+  },
+  {
+    "id": "problem-4-2",
+    "kind": "problem",
+    "number": "4.2",
+    "page": 121,
+    "title": "Aluminum temperature summaries",
+    "section": "4.3",
+    "type": "stats",
+    "args": {
+      "data": [
+        658.2, 659.8, 661.7, 662.1, 659.3, 660.5, 657.9, 662.4, 659.6, 662.2
+      ]
+    },
+    "unit": "°C",
+    "note": "",
+    "status": "Independently verified"
+  },
+  {
+    "id": "problem-4-3",
+    "kind": "problem",
+    "number": "4.3",
+    "page": 121,
+    "title": "Steel thickness summaries",
+    "section": "4.3",
+    "type": "stats",
+    "args": {
+      "data": [
+        3.97, 3.99, 4.04, 4, 3.98, 4.03, 4, 3.98, 3.99, 3.96, 4.02, 3.99, 4.01,
+        3.97, 4.02, 3.99, 3.95, 4.03, 4.01, 4.05, 3.98, 4, 4.04, 3.98, 4.02
+      ]
+    },
+    "unit": "thickness units",
+    "note": "",
+    "status": "Independently verified"
+  },
+  {
+    "id": "problem-4-4",
+    "kind": "problem",
+    "number": "4.4",
+    "page": 121,
+    "title": "Amplifier repeated readings",
+    "section": "4.7",
+    "type": "stats",
+    "args": {
+      "data": [1.53, 1.57, 1.54, 1.54, 1.5, 1.51, 1.55, 1.54, 1.56, 1.53]
+    },
+    "unit": "V",
+    "note": "SEM quantifies precision of the mean, not all accuracy. For 1000 instead of 10 independent observations with unchanged SD it improves by factor 10.",
+    "status": "Audited with clarified assumptions"
+  },
+  {
+    "id": "problem-4-5",
+    "kind": "problem",
+    "number": "4.5",
+    "page": 121,
+    "title": "Analog current readings",
+    "section": "4.3",
+    "type": "stats",
+    "args": {
+      "data": [21.5, 22.1, 21.3, 21.7, 22, 22.2, 21.8, 21.4, 21.9, 22.1]
+    },
+    "unit": "mA",
+    "note": "",
+    "status": "Independently verified"
+  },
+  {
+    "id": "problem-4-6",
+    "kind": "problem",
+    "number": "4.6",
+    "page": 121,
+    "title": "Garden thermometer readings",
+    "section": "4.3",
+    "type": "stats",
+    "args": {
+      "data": [24.6, 27.2, 23.9, 26.5, 25.4, 23.8, 26.4, 25.9, 24.1, 25.2]
+    },
+    "unit": "°C",
+    "note": "",
+    "status": "Independently verified"
+  },
+  {
+    "id": "problem-4-7",
+    "kind": "problem",
+    "number": "4.7",
+    "page": 121,
+    "title": "Controlled column pressure",
+    "section": "4.3",
+    "type": "stats",
+    "args": {
+      "data": [10.7, 11, 11.2, 10.8, 10.6, 11.1, 10.9, 10.8, 10.7, 11]
+    },
+    "unit": "bar",
+    "note": "",
+    "status": "Independently verified"
+  },
+  {
+    "id": "problem-4-8",
+    "kind": "problem",
+    "number": "4.8",
+    "page": 122,
+    "title": "Five error bands for the steel readings",
+    "section": "4.4",
+    "type": "hist",
+    "args": {
+      "data": [
+        3.97, 3.99, 4.04, 4, 3.98, 4.03, 4, 3.98, 3.99, 3.96, 4.02, 3.99, 4.01,
+        3.97, 4.02, 3.99, 3.95, 4.03, 4.01, 4.05, 3.98, 4, 4.04, 3.98, 4.02
+      ],
+      "center": true,
+      "bins": 5,
+      "start": -0.075,
+      "width": 0.03
+    },
+    "unit": "thickness units",
+    "note": "",
+    "status": "Independently verified"
+  },
+  {
+    "id": "problem-4-9",
+    "kind": "problem",
+    "number": "4.9",
+    "page": 122,
+    "title": "Compare Sturges, six-bin and five-bin histograms",
+    "section": "4.4",
+    "type": "histCompare",
+    "args": {
+      "data": [
+        9.4, 10.1, 9.1, 12.3, 10.3, 10, 10.5, 9, 10.8, 9.9, 11.1, 9.8, 7.6, 9.2,
+        10.7, 8.4, 11, 9.7, 11.3, 8.7, 9.9, 11.5, 10, 9.5, 11.9
+      ],
+      "bins": [6, 5]
+    },
+    "unit": "units",
+    "note": "The source says bin size 6/5; use number of bins as the explicit teaching interpretation. Shape alone is not a Gaussian proof.",
+    "status": "Audited with clarified assumptions"
+  },
+  {
+    "id": "problem-4-10",
+    "kind": "problem",
+    "number": "4.10",
+    "page": 122,
+    "title": "Frequency distribution of 30 readings",
+    "section": "4.4",
+    "type": "hist",
+    "args": {
+      "data": [
+        50, 51.4, 49.4, 50.6, 49.8, 50.9, 49.2, 47.9, 49.9, 50.7, 50.1, 49,
+        50.6, 51.8, 49.1, 50.6, 49.7, 49.2, 49.8, 52.3, 50.2, 48.3, 50.1, 50.9,
+        48.9, 49.8, 49.6, 50.3, 49.2, 50.8
+      ],
+      "bins": 6
+    },
+    "unit": "units",
+    "note": "",
+    "status": "Independently verified"
+  },
+  {
+    "id": "problem-4-11",
+    "kind": "problem",
+    "number": "4.11",
+    "page": 122,
+    "title": "Explain Gaussian density and parameter estimation",
+    "section": "4.5",
+    "type": "concept",
+    "args": {},
+    "unit": "",
+    "note": "Density is not point probability; integrate over a region. Estimate mean by x̄ and sample dispersion by s; Gaussian maximum-likelihood variance uses n rather than n−1. No single numeric answer is specified.",
+    "status": "Conceptual explanation reviewed; no unique numerical answer"
+  },
+  {
+    "id": "problem-4-12",
+    "kind": "problem",
+    "number": "4.12",
+    "page": 122,
+    "title": "Central probability inside 1.5 SD",
+    "section": "4.6",
+    "type": "normal",
+    "args": {
+      "mu": 0,
+      "sigma": 1,
+      "ranges": [[-1.5, 1.5]]
+    },
+    "unit": "",
+    "note": "",
+    "status": "Independently verified"
+  },
+  {
+    "id": "problem-4-13",
+    "kind": "problem",
+    "number": "4.13",
+    "page": 122,
+    "title": "Gaussian multiplier for central 95% coverage",
+    "section": "4.6",
+    "type": "normalQuantile",
+    "args": {
+      "level": 0.95
+    },
+    "unit": "",
+    "note": "",
+    "status": "Independently verified"
+  },
+  {
+    "id": "problem-4-14",
+    "kind": "problem",
+    "number": "4.14",
+    "page": 122,
+    "title": "Model counts versus actual steel readings",
+    "section": "4.6",
+    "type": "modelCounts",
+    "args": {
+      "data": [
+        3.97, 3.99, 4.04, 4, 3.98, 4.03, 4, 3.98, 3.99, 3.96, 4.02, 3.99, 4.01,
+        3.97, 4.02, 3.99, 3.95, 4.03, 4.01, 4.05, 3.98, 4, 4.04, 3.98, 4.02
+      ],
+      "ranges": [
+        [null, 4],
+        [null, 3.95],
+        [3.98, 4.02]
+      ]
+    },
+    "unit": "",
+    "note": "Boundary convention here: lower inclusive, upper exclusive for observed intervals; strict x<upper for one-sided counts. Report fractional expected counts rather than force rounded matches.",
+    "status": "Audited with clarified assumptions"
+  },
+  {
+    "id": "problem-4-15",
+    "kind": "problem",
+    "number": "4.15",
+    "page": 122,
+    "title": "Probability counts for the supplied 25-point sample",
+    "section": "4.6",
+    "type": "modelCounts",
+    "args": {
+      "data": [
+        9.4, 10.1, 9.1, 12.3, 10.3, 10, 10.5, 9, 10.8, 10, 11.1, 9.8, 7.6, 9.2,
+        10.7, 8.4, 11, 9.7, 11.3, 8.7, 9.9, 11.5, 10, 9.5, 11.9
+      ],
+      "mu": 10.072,
+      "sigma": 1.1108,
+      "ranges": [
+        [null, 11.05],
+        [9.55, null],
+        [9.95, 10.95]
+      ]
+    },
+    "unit": "",
+    "note": "Use the provided rounded model parameters for expectations and the actual readings for counts; the two need not match exactly.",
+    "status": "Audited with clarified assumptions"
+  },
+  {
+    "id": "problem-4-16",
+    "kind": "problem",
+    "number": "4.16",
+    "page": 121,
+    "title": "Continuity-adjusted steel count boundaries",
+    "section": "4.6",
+    "type": "modelCounts",
+    "args": {
+      "data": [
+        3.97, 3.99, 4.04, 4, 3.98, 4.03, 4, 3.98, 3.99, 3.96, 4.02, 3.99, 4.01,
+        3.97, 4.02, 3.99, 3.95, 4.03, 4.01, 4.05, 3.98, 4, 4.04, 3.98, 4.02
+      ],
+      "ranges": [
+        [null, 3.995],
+        [null, 3.955],
+        [3.975, 4.025]
+      ]
+    },
+    "unit": "",
+    "note": "",
+    "status": "Independently verified"
+  },
+  {
+    "id": "problem-4-17",
+    "kind": "problem",
+    "number": "4.17",
+    "page": 123,
+    "title": "Central Gaussian probability inside 2 SD",
+    "section": "4.6",
+    "type": "normal",
+    "args": {
+      "mu": 0,
+      "sigma": 1,
+      "ranges": [[-2, 2]]
+    },
+    "unit": "",
+    "note": "",
+    "status": "Independently verified"
+  },
+  {
+    "id": "problem-4-18",
+    "kind": "problem",
+    "number": "4.18",
+    "page": 123,
+    "title": "Current-gain manufacturing counts",
+    "section": "4.9",
+    "type": "normal",
+    "args": {
+      "mu": 20,
+      "sigma": 1.5,
+      "ranges": [
+        [19.5, 20.5],
+        [17, null]
+      ],
+      "count": 5000
+    },
+    "unit": "gain",
+    "note": "",
+    "status": "Independently verified"
+  },
+  {
+    "id": "problem-4-19",
+    "kind": "problem",
+    "number": "4.19",
+    "page": 123,
+    "title": "Consumption mean and 95.4% interval",
+    "section": "4.7",
+    "type": "meanData",
+    "args": {
+      "data": [
+        25.5, 31.1, 29.6, 32.4, 39.4, 28.9, 33.3, 31.4, 29.5, 30.5, 31.7, 29.2
+      ],
+      "levels": [0.954]
+    },
+    "unit": "source consumption units",
+    "note": "Use Student-t for estimated population SD; a z/2SEM shortcut is only an approximation.",
+    "status": "Audited with clarified assumptions"
+  },
+  {
+    "id": "problem-4-20",
+    "kind": "problem",
+    "number": "4.20",
+    "page": 124,
+    "title": "Brick manufacturing count probabilities",
+    "section": "4.9",
+    "type": "normal",
+    "args": {
+      "mu": 200,
+      "sigma": 20,
+      "ranges": [
+        [198, 202],
+        [170, null]
+      ],
+      "count": 10000
+    },
+    "unit": "mm",
+    "note": "",
+    "status": "Independently verified"
+  },
+  {
+    "id": "problem-4-21",
+    "kind": "problem",
+    "number": "4.21",
+    "page": 124,
+    "title": "Single pressure indication after reference calibration",
+    "section": "4.8",
+    "type": "singleData",
+    "args": {
+      "data": [
+        199.7, 202, 200.9, 195.7, 200.2, 199.9, 204.4, 198, 203.1, 199.1, 200.5,
+        196.9
+      ],
+      "reference": 200,
+      "reading": 183,
+      "level": 0.95
+    },
+    "unit": "bar",
+    "note": "Assume stable additive bias and transferable independent normal dispersion. Compare the textbook heuristic with finite-reference Student-t prediction; these assumptions need validation at the new pressure.",
+    "status": "Audited with clarified assumptions"
+  },
+  {
+    "id": "problem-4-22",
+    "kind": "problem",
+    "number": "4.22",
+    "page": 124,
+    "title": "Intensive-care temperature probabilities",
+    "section": "4.6",
+    "type": "normal",
+    "args": {
+      "mu": 75,
+      "sigma": 2.15,
+      "ranges": [
+        [null, 70],
+        [73, 77]
+      ]
+    },
+    "unit": "°F",
+    "note": "",
+    "status": "Independently verified"
+  },
+  {
+    "id": "problem-4-23",
+    "kind": "problem",
+    "number": "4.23",
+    "page": 124,
+    "title": "Single temperature indication after reference calibration",
+    "section": "4.8",
+    "type": "singleData",
+    "args": {
+      "data": [
+        150.7, 149.8, 150.4, 153.5, 147.6, 148.5, 152.4, 151.5, 149.3, 149.9,
+        146.6, 150.2
+      ],
+      "reference": 150,
+      "reading": 137,
+      "level": 0.95
+    },
+    "unit": "°C",
+    "note": "Assume dispersion and additive calibration bias transfer to the new temperature. The finite-reference prediction interval is not a bound on every possible error.",
+    "status": "Audited with clarified assumptions"
+  },
+  {
+    "id": "problem-4-24",
+    "kind": "problem",
+    "number": "4.24",
+    "page": 124,
+    "title": "Aluminum mean and 68% interval",
+    "section": "4.7",
+    "type": "meanData",
+    "args": {
+      "data": [
+        658.2, 659.8, 661.7, 662.1, 659.3, 660.5, 657.9, 662.4, 659.6, 662.2
+      ],
+      "levels": [0.68]
+    },
+    "unit": "°C",
+    "note": "",
+    "status": "Independently verified"
+  },
+  {
+    "id": "problem-4-25",
+    "kind": "problem",
+    "number": "4.25",
+    "page": 124,
+    "title": "Gasket yield above the limit",
+    "section": "4.9",
+    "type": "normal",
+    "args": {
+      "mu": 3,
+      "sigma": 0.25,
+      "ranges": [[2.5, null]]
+    },
+    "unit": "mm",
+    "note": "",
+    "status": "Independently verified"
+  },
+  {
+    "id": "problem-4-26",
+    "kind": "problem",
+    "number": "4.26",
+    "page": 125,
+    "title": "Mass variance interval",
+    "section": "4.10",
+    "type": "variance",
+    "args": {
+      "n": 25,
+      "variance": 4.85,
+      "levels": [0.95]
+    },
+    "unit": "g",
+    "note": "Printed g is a variance-unit error: use g². Interpret 95% significance as 95% confidence, α=0.05.",
+    "status": "Audited with clarified assumptions"
+  },
+  {
+    "id": "problem-4-27",
+    "kind": "problem",
+    "number": "4.27",
+    "page": 125,
+    "title": "Tire population SD interval",
+    "section": "4.10",
+    "type": "variance",
+    "args": {
+      "n": 30,
+      "variance": 0.6320250000000001,
+      "levels": [0.99]
+    },
+    "unit": "cm",
+    "note": "",
+    "status": "Independently verified"
+  },
+  {
+    "id": "problem-4-28",
+    "kind": "problem",
+    "number": "4.28",
+    "page": 125,
+    "title": "Rolled-steel grouped Gaussian fit",
+    "section": "4.11.3",
+    "type": "gof",
+    "args": {
+      "counts": [8, 12, 21, 34, 31, 25, 14, 5],
+      "cuts": [10.845, 10.995, 11.145, 11.295, 11.445, 11.595, 11.745],
+      "mu": 11.291,
+      "sigma": 0.263
+    },
+    "unit": "mm",
+    "note": "Counts sum correctly to 150. Preserve all counts. Extend end bins to ±∞, estimate parameters from grouped data, and merge on expected counts before df=k−3. Source bins derived from observed range make the resulting p-value an illustrative asymptotic diagnostic, not an exact calibrated test.",
+    "status": "Audited with clarified assumptions"
+  },
+  {
+    "id": "problem-4-29",
+    "kind": "problem",
+    "number": "4.29",
+    "page": 125,
+    "title": "Casting mass variance intervals",
+    "section": "4.10",
+    "type": "variance",
+    "args": {
+      "n": 20,
+      "variance": 1.36,
+      "levels": [0.9, 0.95]
+    },
+    "unit": "kg",
+    "note": "Variance unit is kg². Interpret confidence rather than the literal contradictory significance phrasing.",
+    "status": "Audited with clarified assumptions"
+  },
+  {
+    "id": "problem-4-30",
+    "kind": "problem",
+    "number": "4.30",
+    "page": 125,
+    "title": "Furnace grouped Gaussian fit with sparse tails",
+    "section": "4.11.3",
+    "type": "gof",
+    "args": {
+      "counts": [3, 8, 21, 30, 28, 19, 9, 2],
+      "cuts": [785.5, 790.5, 795.5, 800.5, 805.5, 810.5, 815.5],
+      "mu": 800.3,
+      "sigma": 7.58
+    },
+    "unit": "°C",
+    "note": "Counts sum to 120. Extend tails and merge based on expected frequency. Source range-based bin choice makes p illustrative; non-rejection does not prove normality.",
+    "status": "Audited with clarified assumptions"
+  },
+  {
+    "id": "problem-4-31",
+    "kind": "problem",
+    "number": "4.31",
+    "page": 125,
+    "title": "Bulb lifetime SD intervals",
+    "section": "4.10",
+    "type": "variance",
+    "args": {
+      "n": 51,
+      "variance": 88.36000000000001,
+      "levels": [0.95, 0.99]
+    },
+    "unit": "h",
+    "note": "",
+    "status": "Independently verified"
+  },
+  {
+    "id": "problem-4-32",
+    "kind": "problem",
+    "number": "4.32",
+    "page": 126,
+    "title": "Screen pressure run against initial reference",
+    "section": "4.12",
+    "type": "referenceFlags",
+    "args": {
+      "referenceData": [
+        1015, 1003, 1044, 1000, 985, 971, 999, 990, 994, 1000, 1032, 1001, 973,
+        1006, 979, 961, 1010, 1021, 997, 1026
+      ],
+      "data": [
+        961, 1010, 990, 1039, 997, 1015, 1000, 949, 1000, 1051, 1001, 976, 1003,
+        985, 932, 1006, 999, 1021, 1029, 994
+      ]
+    },
+    "unit": "mbar",
+    "note": "A reference run without 3s flags is not certified outlier-free; retain flagged readings pending investigation.",
+    "status": "Audited with clarified assumptions"
+  },
+  {
+    "id": "problem-4-33",
+    "kind": "problem",
+    "number": "4.33",
+    "page": 126,
+    "title": "Student-t definition, curves and 99% critical values",
+    "section": "4.13",
+    "type": "tQuantile",
+    "args": {
+      "df": 20,
+      "level": 0.99
+    },
+    "unit": "",
+    "note": "Show both one-sided 99th percentile and central 99% critical value; extra lifetime-bin prose below this exercise belongs to an inconsistent neighboring source block.",
+    "status": "Audited with clarified assumptions"
+  },
+  {
+    "id": "problem-4-34",
+    "kind": "problem",
+    "number": "4.34",
+    "page": 126,
+    "title": "Audit inconsistent thermocouple lifetime bins",
+    "section": "4.11.3",
+    "type": "gof",
+    "args": {
+      "counts": [3, 8, 27, 39, 46, 40, 24, 11, 2],
+      "cuts": [876.5, 893.5, 910.5, 927.5, 944.5, 961.5, 978.5, 995.5],
+      "mu": 936,
+      "sigma": 28
+    },
+    "unit": "h",
+    "note": "Rendered p126 confirms counts sum to 200, but first-bin prose 869.5–886.5 disagrees with listed 859.5–876.5 and says days rather than hours. Explicit adaptation: use the listed boundary sequence and hours; extend tails and use grouped MLE. No unsupported unique source p-value is claimed.",
+    "status": "Source ambiguity documented; adapted calculation verified"
+  },
+  {
+    "id": "problem-4-35",
+    "kind": "problem",
+    "number": "4.35",
+    "page": 126,
+    "title": "Temperature outlier screening with a separate reference",
+    "section": "4.12",
+    "type": "referenceFlags",
+    "args": {
+      "referenceData": [
+        507, 502, 520, 500, 492, 485, 499, 495, 497, 500, 516, 501, 489, 503,
+        490, 481, 504, 511, 499, 512
+      ],
+      "data": [
+        481, 505, 495, 519, 498, 515, 508, 477, 500, 526, 501, 488, 502, 492,
+        464, 503, 499, 510, 515, 497
+      ]
+    },
+    "unit": "°C",
+    "note": "",
+    "status": "Independently verified"
+  },
+  {
+    "id": "problem-4-36",
+    "kind": "problem",
+    "number": "4.36",
+    "page": 127,
+    "title": "Pressure-vessel mean diameter interval",
+    "section": "4.13",
+    "type": "mean",
+    "args": {
+      "mean": 346,
+      "sd": 7,
+      "n": 8,
+      "levels": [0.95]
+    },
+    "unit": "mm",
+    "note": "",
+    "status": "Independently verified"
+  },
+  {
+    "id": "problem-4-37",
+    "kind": "problem",
+    "number": "4.37",
+    "page": 127,
+    "title": "Perfume mean volume interval",
+    "section": "4.13",
+    "type": "mean",
+    "args": {
+      "mean": 100.5,
+      "sd": 0.64,
+      "n": 10,
+      "levels": [0.95]
+    },
+    "unit": "mL",
+    "note": "",
+    "status": "Independently verified"
+  },
+  {
+    "id": "problem-4-38",
+    "kind": "problem",
+    "number": "4.38",
+    "page": 127,
+    "title": "Two batteries in series",
+    "section": "4.14.2",
+    "type": "prop",
+    "args": {
+      "model": "sum",
+      "values": [1.5, 1.5],
+      "errors": [0.015, 0.015]
+    },
+    "unit": "V",
+    "note": "Source error limits do not uniquely specify standard uncertainties. Show first-order worst-case bounds, conditional RSS if inputs are standard uncertainties, and RSS/√3 if independent rectangular limits. RSS is never a guaranteed maximum.",
+    "status": "Audited with clarified assumptions"
+  },
+  {
+    "id": "problem-4-39",
+    "kind": "problem",
+    "number": "4.39",
+    "page": 127,
+    "title": "Thermocouple measurement-chain errors",
+    "section": "4.14.1",
+    "type": "relativeProp",
+    "args": {
+      "errors": [0.01, 0.005, 0.02],
+      "operation": "product"
+    },
+    "unit": "",
+    "note": "Source error limits do not uniquely specify standard uncertainties. Show first-order worst-case bounds, conditional RSS if inputs are standard uncertainties, and RSS/√3 if independent rectangular limits. RSS is never a guaranteed maximum.",
+    "status": "Audited with clarified assumptions"
+  },
+  {
+    "id": "problem-4-40",
+    "kind": "problem",
+    "number": "4.40",
+    "page": 127,
+    "title": "Piezoresistive pressure-chain errors",
+    "section": "4.14.1",
+    "type": "relativeProp",
+    "args": {
+      "errors": [0.02, 0.015, 0.01],
+      "operation": "product"
+    },
+    "unit": "",
+    "note": "Source error limits do not uniquely specify standard uncertainties. Show first-order worst-case bounds, conditional RSS if inputs are standard uncertainties, and RSS/√3 if independent rectangular limits. RSS is never a guaranteed maximum.",
+    "status": "Audited with clarified assumptions"
+  },
+  {
+    "id": "problem-4-41",
+    "kind": "problem",
+    "number": "4.41",
+    "page": 127,
+    "title": "Resistance sum with stated tolerances",
+    "section": "4.14.2",
+    "type": "prop",
+    "args": {
+      "model": "sum",
+      "values": [1000, 220],
+      "errors": [50, 11]
+    },
+    "unit": "Ω",
+    "note": "Source error limits do not uniquely specify standard uncertainties. Show first-order worst-case bounds, conditional RSS if inputs are standard uncertainties, and RSS/√3 if independent rectangular limits. RSS is never a guaranteed maximum.",
+    "status": "Audited with clarified assumptions"
+  },
+  {
+    "id": "problem-4-42",
+    "kind": "problem",
+    "number": "4.42",
+    "page": 128,
+    "title": "Wall temperature difference using full-scale limits",
+    "section": "4.14.2",
+    "type": "prop",
+    "args": {
+      "model": "difference",
+      "values": [20, 5],
+      "errors": [0.5, 0.5]
+    },
+    "unit": "°C",
+    "note": "Source error limits do not uniquely specify standard uncertainties. Show first-order worst-case bounds, conditional RSS if inputs are standard uncertainties, and RSS/√3 if independent rectangular limits. RSS is never a guaranteed maximum. Narrower valid ranges reduce a %FS absolute limit.",
+    "status": "Audited with clarified assumptions"
+  },
+  {
+    "id": "problem-4-43",
+    "kind": "problem",
+    "number": "4.43",
+    "page": 128,
+    "title": "Venturi pressure difference",
+    "section": "4.14.2",
+    "type": "prop",
+    "args": {
+      "model": "difference",
+      "values": [15.2, 14.7],
+      "errors": [0.0304, 0.0294]
+    },
+    "unit": "bar",
+    "note": "Source error limits do not uniquely specify standard uncertainties. Show first-order worst-case bounds, conditional RSS if inputs are standard uncertainties, and RSS/√3 if independent rectangular limits. RSS is never a guaranteed maximum. Use the explicitly supplied linear F=KΔp; a real Venturi often has a square-root relation. K is unspecified, so report Δp and fractional flow uncertainty.",
+    "status": "Audited with clarified assumptions"
+  },
+  {
+    "id": "problem-4-44",
+    "kind": "problem",
+    "number": "4.44",
+    "page": 128,
+    "title": "Headlight power uncertainty",
+    "section": "4.14.2",
+    "type": "relativeProp",
+    "args": {
+      "errors": [0.01, 0.02],
+      "operation": "product"
+    },
+    "unit": "",
+    "note": "Source error limits do not uniquely specify standard uncertainties. Show first-order worst-case bounds, conditional RSS if inputs are standard uncertainties, and RSS/√3 if independent rectangular limits. RSS is never a guaranteed maximum.",
+    "status": "Audited with clarified assumptions"
+  },
+  {
+    "id": "problem-4-45",
+    "kind": "problem",
+    "number": "4.45",
+    "page": 128,
+    "title": "Resistance from voltage and current",
+    "section": "4.14.2",
+    "type": "prop",
+    "args": {
+      "model": "quotient",
+      "values": [10, 0.214],
+      "errors": [0.1, 0.005]
+    },
+    "unit": "Ω",
+    "note": "Source error limits do not uniquely specify standard uncertainties. Show first-order worst-case bounds, conditional RSS if inputs are standard uncertainties, and RSS/√3 if independent rectangular limits. RSS is never a guaranteed maximum. Convert 214±5 mA to 0.214±0.005 A.",
+    "status": "Audited with clarified assumptions"
+  },
+  {
+    "id": "problem-4-46",
+    "kind": "problem",
+    "number": "4.46",
+    "page": 128,
+    "title": "Specific energy from energy/volume",
+    "section": "4.14.2",
+    "type": "relativeProp",
+    "args": {
+      "errors": [0.01, 0.02],
+      "operation": "quotient"
+    },
+    "unit": "",
+    "note": "Source error limits do not uniquely specify standard uncertainties. Show first-order worst-case bounds, conditional RSS if inputs are standard uncertainties, and RSS/√3 if independent rectangular limits. RSS is never a guaranteed maximum.",
+    "status": "Audited with clarified assumptions"
+  },
+  {
+    "id": "problem-4-47",
+    "kind": "problem",
+    "number": "4.47",
+    "page": 128,
+    "title": "Audit sum/difference/product bounds and tank flow",
+    "section": "4.14.3",
+    "type": "tankRect",
+    "args": {
+      "h1": 0.8,
+      "h2": 1.3,
+      "l": 4.2,
+      "w": 2.9,
+      "fractions": [0.01, 0.01, 0.005, 0.005]
+    },
+    "unit": "m³/min",
+    "note": "Rendered pp128–129 confirm ±(ay−bz), which is not a valid general difference bound. Use |ay|+|bz|; independent standard uncertainty is sqrt((ay)²+(bz)²). Product first-order a+b omits ab; explicitly state that approximation. Time is 1 min and treated exact.",
+    "status": "Source ambiguity documented; corrected calculation verified"
+  },
+  {
+    "id": "problem-4-48",
+    "kind": "problem",
+    "number": "4.48",
+    "page": 129,
+    "title": "Rectangular block density relative error",
+    "section": "4.14.3",
+    "type": "relativeProp",
+    "args": {
+      "errors": [0.01, 0.005, 0.005, 0.005],
+      "operation": "density"
+    },
+    "unit": "",
+    "note": "Source error limits do not uniquely specify standard uncertainties. Show first-order worst-case bounds, conditional RSS if inputs are standard uncertainties, and RSS/√3 if independent rectangular limits. RSS is never a guaranteed maximum.",
+    "status": "Audited with clarified assumptions"
+  },
+  {
+    "id": "problem-4-49",
+    "kind": "problem",
+    "number": "4.49",
+    "page": 130,
+    "title": "Liquid density from tank dimensions and mass",
+    "section": "4.14.3",
+    "type": "relativeProp",
+    "args": {
+      "errors": [0.01, 0.01, 0.02, 0.005],
+      "operation": "density"
+    },
+    "unit": "",
+    "note": "Source error limits do not uniquely specify standard uncertainties. Show first-order worst-case bounds, conditional RSS if inputs are standard uncertainties, and RSS/√3 if independent rectangular limits. RSS is never a guaranteed maximum.",
+    "status": "Audited with clarified assumptions"
+  },
+  {
+    "id": "problem-4-50",
+    "kind": "problem",
+    "number": "4.50",
+    "page": 130,
+    "title": "Cylindrical tank flow and repeated diameter sensitivity",
+    "section": "4.14.3",
+    "type": "prop",
+    "args": {
+      "model": "tank",
+      "values": [2, 3, 2, 10],
+      "errors": [0.02, 0.03, 0.02, 0]
+    },
+    "unit": "m³/min",
+    "note": "Source error limits do not uniquely specify standard uncertainties. Show first-order worst-case bounds, conditional RSS if inputs are standard uncertainties, and RSS/√3 if independent rectangular limits. RSS is never a guaranteed maximum. The same diameter occurs as d²: use one sensitivity 2q/d, not two independent diameter readings. Time is exact.",
+    "status": "Audited with clarified assumptions"
+  },
+  {
+    "id": "problem-4-51",
+    "kind": "problem",
+    "number": "4.51",
+    "page": 130,
+    "title": "Central Gaussian probability inside 2.5 SD",
+    "section": "4.6",
+    "type": "normal",
+    "args": {
+      "mu": 0,
+      "sigma": 1,
+      "ranges": [[-2.5, 2.5]]
+    },
+    "unit": "",
+    "note": "",
+    "status": "Independently verified"
+  },
+  {
+    "id": "problem-4-52",
+    "kind": "problem",
+    "number": "4.52",
+    "page": 130,
+    "title": "Resistor packet descriptive statistics",
+    "section": "4.3",
+    "type": "stats",
+    "args": {
+      "data": [
+        546, 558, 585, 539, 542, 570, 566, 541, 563, 574, 547, 568, 550, 534,
+        572
+      ]
+    },
+    "unit": "Ω",
+    "note": "",
+    "status": "Independently verified"
+  },
+  {
+    "id": "problem-4-53",
+    "kind": "problem",
+    "number": "4.53",
+    "page": 130,
+    "title": "Single vortex-flowmeter indication",
+    "section": "4.8",
+    "type": "singleData",
+    "args": {
+      "data": [
+        99.8, 99.3, 100.2, 99.7, 100.9, 99.9, 99.4, 101.1, 99.5, 100.8, 100.4,
+        99
+      ],
+      "reference": 100,
+      "reading": 94.6,
+      "level": 0.954
+    },
+    "unit": "L/min",
+    "note": "Transferable normal scatter and stable bias are assumptions, not established at 94.6 L/min. Source 95.4% textbook heuristic and proper prediction interval are distinct.",
+    "status": "Audited with clarified assumptions"
+  },
+  {
+    "id": "problem-4-54",
+    "kind": "problem",
+    "number": "4.54",
+    "page": 131,
+    "title": "Steel plate yield above 49 mm",
+    "section": "4.9",
+    "type": "normal",
+    "args": {
+      "mu": 50,
+      "sigma": 3,
+      "ranges": [[49, null]]
+    },
+    "unit": "mm",
+    "note": "The word gaskets is a prose mismatch; the numerical calculation concerns the stated steel plates.",
+    "status": "Audited with clarified assumptions"
+  },
+  {
+    "id": "problem-4-55",
+    "kind": "problem",
+    "number": "4.55",
+    "page": 131,
+    "title": "Copper-bar population SD interval",
+    "section": "4.10",
+    "type": "variance",
+    "args": {
+      "n": 20,
+      "variance": 0.6400000000000001,
+      "levels": [0.98]
+    },
+    "unit": "mm",
+    "note": "",
+    "status": "Independently verified"
+  },
+  {
+    "id": "problem-4-56",
+    "kind": "problem",
+    "number": "4.56",
+    "page": 131,
+    "title": "Audit ceramic-tile frequency total",
+    "section": "4.11.3",
+    "type": "gof",
+    "args": {
+      "counts": [6, 10, 17, 27, 25, 20, 11, 4],
+      "cuts": [16.305, 16.525, 16.745, 16.965, 17.185, 17.405, 17.625],
+      "mu": 16.937,
+      "sigma": 0.395
+    },
+    "unit": "mm",
+    "note": "Rendered p131 confirms all eight counts total 120, matching the stated sample size. Preserve counts; extend end bins, fit grouped parameters and merge expected sparse bins. Source range-based cutpoints make p an asymptotic diagnostic.",
+    "status": "Audited with clarified assumptions"
+  },
+  {
+    "id": "problem-4-57",
+    "kind": "problem",
+    "number": "4.57",
+    "page": 131,
+    "title": "Population bulb lifetime SD intervals",
+    "section": "4.10",
+    "type": "variance",
+    "args": {
+      "n": 30,
+      "variance": 702.25,
+      "levels": [0.9, 0.95]
+    },
+    "unit": "h",
+    "note": "",
+    "status": "Independently verified"
+  },
+  {
+    "id": "problem-4-58",
+    "kind": "problem",
+    "number": "4.58",
+    "page": 131,
+    "title": "Kiln reference and new-run outlier investigation",
+    "section": "4.12",
+    "type": "referenceFlags",
+    "args": {
+      "referenceData": [
+        256, 251, 249, 262, 253, 245, 252, 250, 261, 251, 253, 254, 247, 255,
+        248, 243, 255, 259, 252, 258
+      ],
+      "data": [
+        240, 253, 247, 260, 249, 253, 254, 239, 250, 263, 251, 244, 251, 246,
+        232, 251, 249, 255, 258, 248
+      ]
+    },
+    "unit": "°C",
+    "note": "Rendered p131 prints “25,0”. Explicit adaptation interprets this as 250 to keep the stated 20 readings and plausible scale; preserve this ambiguity in the source note.",
+    "status": "Source ambiguity documented; adapted calculation verified"
+  },
+  {
+    "id": "problem-4-59",
+    "kind": "problem",
+    "number": "4.59",
+    "page": 131,
+    "title": "Wall heat-loss propagated relative error",
+    "section": "4.14.3",
+    "type": "heat",
+    "args": {
+      "inside": 20,
+      "outside": 5,
+      "temperatureFractions": [0.01, 0.01],
+      "dimensionFractions": [0.005, 0.005]
+    },
+    "unit": "",
+    "note": "Source error limits do not uniquely specify standard uncertainties. Show first-order worst-case bounds, conditional RSS if inputs are standard uncertainties, and RSS/√3 if independent rectangular limits. RSS is never a guaranteed maximum. U treated exact; dimensions unspecified, so report relative rather than absolute heat-loss error.",
+    "status": "Audited with clarified assumptions"
+  },
+  {
+    "id": "problem-4-60",
+    "kind": "problem",
+    "number": "4.60",
+    "page": 132,
+    "title": "Bottle mean volume interval",
+    "section": "4.13",
+    "type": "mean",
+    "args": {
+      "mean": 752,
+      "sd": 8,
+      "n": 20,
+      "levels": [0.95]
+    },
+    "unit": "mL",
+    "note": "Rendered p132 confirms volume inputs in mL but conclusion says internal diameter. Explicit correction: estimate mean volume; no diameter conversion is possible from the supplied data.",
+    "status": "Source ambiguity documented; corrected quantity verified"
+  }
+]

@@ -1,0 +1,105 @@
+.bench-grid > * {
+  min-width: 0;
+}
+.controls input,
+.controls textarea,
+.controls select {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+textarea {
+  font: inherit;
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--border, #bac7ce);
+  border-radius: 8px;
+  padding: 10px;
+}
+.data-table {
+  position: relative;
+  overflow: auto;
+  max-width: 100%;
+}
+pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  padding: 16px;
+  background: #edf4f6;
+  max-height: 340px;
+  overflow: auto;
+}
+#lab-results {
+  min-width: 0;
+}
+.plot {
+  margin: 20px 0;
+  max-width: 100%;
+}
+.plot svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.plot text {
+  font-size: 15px;
+  fill: currentColor;
+}
+#stage-nav li {
+  margin-bottom: 6px;
+}
+#stage-nav a[aria-current] {
+  font-weight: 700;
+  background: #dceff2;
+}
+#error:not(:empty) {
+  padding: 14px;
+  color: #852b1f;
+  border: 2px solid #c26b4d;
+  margin-bottom: 12px;
+}
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+}
+.metric strong {
+  overflow-wrap: anywhere;
+}
+.explain details,
+#exercise-body details {
+  margin: 12px 0;
+  padding: 10px;
+  border: 1px solid #beced2;
+  border-radius: 8px;
+}
+.explain {
+  margin-top: 24px;
+}
+@media (max-width: 600px) {
+  .plot text {
+    font-size: 23px;
+  }
+  .bench-grid {
+    grid-template-columns: 1fr;
+  }
+  .metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .metric strong {
+    font-size: 1.2rem;
+  }
+  pre {
+    font-size: 0.85rem;
+  }
+}
+.controls input[type="number"],
+.controls input[type="text"],
+#exercise-filter,
+#answer {
+  font: inherit;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: white;
+}
