@@ -1,0 +1,96 @@
+/* Chapter-only extensions to the existing laboratory design. */
+.learning-badge {
+  display: inline-block;
+  font-size: 0.66rem;
+  letter-spacing: 0.05em;
+  padding: 2px 6px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+.learning-badge.core {
+  color: var(--accent);
+  background: var(--accent-light);
+  border-color: var(--accent);
+}
+.learning-badge.explore {
+  color: var(--muted);
+  background: var(--paper);
+}
+.toggle {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  min-height: 44px;
+  font-size: 0.83rem;
+  margin: 6px 0;
+}
+.toggle input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--accent);
+  flex-shrink: 0;
+}
+.equation {
+  padding: 15px;
+  background: var(--accent-light);
+  border-radius: 6px;
+  overflow-wrap: anywhere;
+}
+#lab-results > .plot {
+  margin-bottom: 24px;
+}
+.ai-investigation textarea {
+  min-height: 90px;
+}
+.ai-investigation .control {
+  margin-top: 15px;
+}
+.data-table {
+  max-width: 100%;
+}
+.data-table table {
+  min-width: 360px;
+}
+caption {
+  text-align: left;
+  font-weight: 650;
+  margin-bottom: 10px;
+}
+.evidence-table table {
+  min-width: 850px;
+}
+.evidence-table textarea {
+  min-width: 130px;
+  min-height: 85px;
+}
+.evidence-table select {
+  min-height: 44px;
+  max-width: 165px;
+}
+.control textarea {
+  font-weight: 400;
+}
+#case-evidence .observation {
+  margin-bottom: 16px;
+}
+@media (max-width: 430px) {
+  .control > span {
+    flex-wrap: wrap;
+  }
+  .sidebar ol {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+/* Keep visually hidden cell labels inside their scroll container. */
+.data-table {
+  position: relative;
+}
+.ai-problem {
+  margin: 12px 0 18px;
+}
+/* Auto minimum grid widths must not force plots outside the phone bench. */
+.bench-grid > div {
+  min-width: 0;
+}
