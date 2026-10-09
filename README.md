@@ -1,6 +1,6 @@
 # Measurement & Instrumentation Interactive Lab
 
-An original, browser-based undergraduate engineering learning environment for **Chapter 2: Instrument Types and Performance Characteristics**. Students predict, operate an instrument, observe evidence, explain behavior, and make engineering decisions. Suitable for lecture demonstrations, laboratory discussion, and self-study.
+An original, browser-based undergraduate engineering learning environment for **Chapter 2: Instrument Types and Performance Characteristics** and **Chapter 3: Measurement Errors, Uncertainty & Noise**. Students predict, operate an instrument, observe evidence, explain behavior, and make engineering decisions. Suitable for lecture demonstrations, laboratory discussion, and self-study.
 
 Conceptual basis: Alan S. Morris and Reza Langari, _Measurement and Instrumentation: Theory and Application_, third edition, Chapter 2. Explanations, examples, SVG diagrams, questions, and simulations are original. The textbook PDF is not distributed in this repository.
 
@@ -118,3 +118,13 @@ Only the supplied Morris & Langari material was available in this checkout/sessi
 ## Future extensions
 
 Add another chapter in its own `chapters/` directory with a dedicated controller and reuse the shared styles, SVG utilities, and pure models. Keep a complete learning path rather than adding empty chapter links. Add model tests for any new engineering equations and browser checks for new controls. No future-chapter placeholders are needed to use Chapter 2 now.
+
+## Chapter 3 — Measurement Errors, Uncertainty & Noise
+
+Chapter 3 is an integrated seven-stage continuation at `chapters/chapter-03/index.html`, linked from the course home. It covers the six required textbook topics: systematic sources, reduction, quantification, random errors, induced noise, and noise reduction. Its final aircraft pressure-chain investigation requires diagnostic evidence, a matching correction, and independent validation.
+
+Reuse the existing preview command. `npm test` now runs both chapter model suites; `npm run test:browser` runs the unchanged Chapter 2 browser suite followed by Chapter 3. No new dependency, build step, account, AI API, or deployment setting is required.
+
+The Chapter 3 controller, labs, aircraft case, UI helpers and pure models are in `assets/js/chapter3*.mjs`, with a chapter shell and local CSS in `chapters/chapter-03/`. Existing shared UI, statistics and air-data utilities are reused. Its optional progress storage is independent of Chapter 2. All written evidence stays in the current page until downloaded and resets on navigation.
+
+See [Chapter 3 instructor and model guide](docs/chapter-03.md) for the repository audit, LO1–LO10 mapping, laboratory and AI workflows, equations, noise/spectrum/filter assumptions, instructor case key, validation methodology, limits and future improvements. The teaching distinction is explicit: error is not uncertainty; correcting known bias does not remove all uncertainty; averaging can improve precision while preserving bias; and less visible noise can accompany worse signal fidelity. The original Chapter 2 journey, roadmap and future-extension guidance remain unchanged. This checkout contains no Chapter 1 or legacy phase code.
