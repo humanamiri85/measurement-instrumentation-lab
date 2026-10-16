@@ -1,0 +1,209 @@
+.bench-grid > * {
+  min-width: 0;
+}
+.controls input,
+.controls textarea,
+.controls select {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+textarea {
+  font: inherit;
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--border, #bac7ce);
+  border-radius: 8px;
+  padding: 10px;
+}
+.data-table {
+  position: relative;
+  overflow: auto;
+  max-width: 100%;
+}
+pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  padding: 16px;
+  background: #edf4f6;
+  max-height: 340px;
+  overflow: auto;
+}
+#lab-results {
+  min-width: 0;
+}
+.plot {
+  margin: 20px 0;
+  max-width: 100%;
+}
+.plot svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.plot text {
+  font-size: 15px;
+  fill: currentColor;
+}
+#stage-nav li {
+  margin-bottom: 6px;
+}
+#stage-nav a[aria-current] {
+  font-weight: 700;
+  background: #dceff2;
+}
+#error:not(:empty) {
+  padding: 14px;
+  color: #852b1f;
+  border: 2px solid #c26b4d;
+  margin-bottom: 12px;
+}
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+}
+.metric strong {
+  overflow-wrap: anywhere;
+}
+.explain details,
+#exercise-body details {
+  margin: 12px 0;
+  padding: 10px;
+  border: 1px solid #beced2;
+  border-radius: 8px;
+}
+.explain {
+  margin-top: 24px;
+}
+@media (max-width: 600px) {
+  .plot text {
+    font-size: 23px;
+  }
+  .bench-grid {
+    grid-template-columns: 1fr;
+  }
+  .metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .metric strong {
+    font-size: 1.2rem;
+  }
+  pre {
+    font-size: 0.85rem;
+  }
+}
+.controls input[type="number"],
+.controls input[type="text"],
+#exercise-filter,
+#answer {
+  font: inherit;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: white;
+}
+
+.gridline {
+  stroke: #d5dfdf;
+  fill: none;
+  stroke-width: 1;
+}
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  margin-top: 8px;
+}
+.legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.legend i {
+  width: 18px;
+  height: 4px;
+  display: inline-block;
+}
+.chain {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 0;
+  list-style: none;
+}
+.chain li {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px;
+  flex: 1 1 130px;
+}
+.circuit {
+  margin: 18px 0;
+}
+.circuit svg {
+  width: 100%;
+  height: auto;
+}
+.circuit-label {
+  fill: currentColor;
+  font-size: 16px;
+}
+fieldset {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  min-width: 0;
+  margin: 12px 0;
+}
+.controls input,
+.controls select,
+.controls textarea {
+  font: inherit;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px;
+  background: white;
+}
+#result-column {
+  min-width: 0;
+}
+#error:not(:empty) {
+  border: 2px solid #b45125;
+  padding: 12px;
+  color: #852b1f;
+}
+#stage-nav a[aria-current] {
+  background: var(--accent-light);
+}
+#exercise-answer {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  font: inherit;
+  padding: 10px;
+}
+.plot text {
+  font-size: 16px;
+}
+@media (max-width: 600px) {
+  .plot text {
+    font-size: 24px;
+  }
+  .circuit-label {
+    font-size: 20px;
+  }
+  .legend {
+    font-size: 0.9rem;
+  }
+  .chain {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  * {
+    scroll-behavior: auto !important;
+    animation: none !important;
+    transition: none !important;
+  }
+}
