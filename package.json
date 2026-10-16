@@ -5,7 +5,7 @@
   "description": "Original interactive engineering learning activities for Chapter 2",
   "scripts": {
     "test": "node --test tests/*.test.mjs",
-    "test:browser": "node tests/browser.mjs && node tests/chapter3-browser.mjs",
+    "test:browser": "node tests/browser.mjs && node tests/chapter3-browser.mjs && node tests/chapter4-browser.mjs",
     "preview": "python3 -m http.server 8000 --bind 127.0.0.1"
   },
   "devDependencies": {
